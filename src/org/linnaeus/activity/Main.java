@@ -1,6 +1,7 @@
 package org.linnaeus.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 /**
@@ -16,5 +17,6 @@ public class Main extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        startActivity(new Intent(this, PaintArea.class));
     }
 }
