@@ -8,16 +8,157 @@
 package org.linnaeus.activity;
 
 public final class R {
+    public static final class array {
+        /**  Add your name here if you helped out 
+ <item>pjv https://launchpad.net/~pjv</item>  
+         */
+        public static final int about_artists=0x7f060003;
+        public static final int about_authors=0x7f060000;
+        public static final int about_documenters=0x7f060001;
+        /**  Add your name here if you helped out, but only in the arrays.xml for the localization that you helped to translate into! 
+ <item>pjv https://launchpad.net/~pjv</item>  
+         */
+        public static final int about_translators=0x7f060002;
+    }
     public static final class attr {
     }
     public static final class drawable {
-        public static final int icon=0x7f020000;
+        public static final int happy=0x7f020000;
+        public static final int ic_launcher_folder=0x7f020001;
+        public static final int ic_launcher_folder_open=0x7f020002;
+        public static final int ic_launcher_home=0x7f020003;
+        public static final int ic_launcher_home_small=0x7f020004;
+        public static final int ic_menu_back_small=0x7f020005;
+        public static final int ic_menu_forward_small=0x7f020006;
+        public static final int ic_menu_info_details=0x7f020007;
+        public static final int icon=0x7f020008;
+        public static final int icon_file=0x7f020009;
+        public static final int icon_sdcard=0x7f02000a;
+        public static final int icon_sdcard_small=0x7f02000b;
+    }
+    public static final class id {
+        public static final int background=0x7f080017;
+        public static final int button_directory_pick=0x7f080020;
+        public static final int button_pick=0x7f080022;
+        public static final int colorcircle=0x7f080019;
+        public static final int directory_buttons=0x7f08001d;
+        public static final int directory_input=0x7f08001e;
+        public static final int directory_text=0x7f08001f;
+        public static final int empty=0x7f080023;
+        public static final int empty_text=0x7f080024;
+        public static final int et_artists=0x7f080013;
+        public static final int et_authors=0x7f08000d;
+        public static final int et_documenters=0x7f08000f;
+        public static final int et_license=0x7f080016;
+        public static final int et_translators=0x7f080011;
+        public static final int filename=0x7f080021;
+        public static final int foldername=0x7f08001c;
+        public static final int foldernametext=0x7f08001b;
+        public static final int i_email=0x7f080008;
+        public static final int i_logo=0x7f080002;
+        public static final int icon=0x7f080026;
+        public static final int info=0x7f080028;
+        public static final int l_artists=0x7f080012;
+        public static final int l_authors=0x7f08000c;
+        public static final int l_documenters=0x7f08000e;
+        public static final int l_translators=0x7f080010;
+        public static final int ll_credits=0x7f08000b;
+        public static final int ll_email=0x7f080007;
+        public static final int ll_info=0x7f080001;
+        public static final int saturation=0x7f080018;
+        public static final int scan_progress=0x7f080025;
+        public static final int sv_credits=0x7f08000a;
+        public static final int sv_info=0x7f080000;
+        public static final int sv_license=0x7f080015;
+        public static final int t_comments=0x7f080004;
+        public static final int t_copyright=0x7f080006;
+        public static final int t_email=0x7f080009;
+        public static final int t_program_name_and_version=0x7f080003;
+        public static final int t_website=0x7f080005;
+        public static final int text=0x7f080027;
+        public static final int tv_no_information=0x7f080014;
+        public static final int value=0x7f08001a;
     }
     public static final class layout {
-        public static final int main=0x7f030000;
+        public static final int about=0x7f030000;
+        public static final int colorpicker=0x7f030001;
+        public static final int dialog_new_folder=0x7f030002;
+        public static final int filelist=0x7f030003;
+        public static final int filelist_item=0x7f030004;
+        public static final int main=0x7f030005;
+    }
+    public static final class raw {
+        public static final int license_short=0x7f050000;
     }
     public static final class string {
-        public static final int app_name=0x7f040001;
-        public static final int hello=0x7f040000;
+        public static final int about_activity_name=0x7f070033;
+        public static final int about_activity_title=0x7f070035;
+        public static final int about_chooser_title=0x7f070030;
+        public static final int about_comments=0x7f070029;
+        public static final int about_copyright=0x7f07002a;
+        public static final int about_email=0x7f07002f;
+        public static final int about_logo_description=0x7f07002e;
+        public static final int about_logo_title=0x7f07002d;
+        /**  openintents 
+         */
+        public static final int about_translators=0x7f070002;
+        /**  Add your name here, separated with comma's, if you helped out 
+         */
+        public static final int about_website_label=0x7f07002b;
+        public static final int about_website_url=0x7f07002c;
+        public static final int app_name=0x7f070001;
+        public static final int application_not_available=0x7f070028;
+        public static final int color_picker=0x7f070003;
+        public static final int copied_file_name=0x7f07001b;
+        public static final int copied_file_name_2=0x7f07001c;
+        public static final int copy_button=0x7f07001a;
+        public static final int copy_title=0x7f070019;
+        public static final int create_new_folder=0x7f07000b;
+        public static final int error_copying_file=0x7f070024;
+        public static final int error_creating_new_folder=0x7f07001d;
+        public static final int error_deleting_child_file=0x7f070026;
+        public static final int error_deleting_file=0x7f07001e;
+        public static final int error_deleting_folder=0x7f07001f;
+        public static final int error_file_does_not_exists=0x7f070025;
+        public static final int error_moving_file=0x7f070022;
+        public static final int error_moving_folder=0x7f070023;
+        public static final int error_renaming_file=0x7f070020;
+        public static final int error_renaming_folder=0x7f070021;
+        public static final int file_copied=0x7f070016;
+        public static final int file_deleted=0x7f070010;
+        public static final int file_moved=0x7f070014;
+        public static final int file_name=0x7f07000d;
+        public static final int file_renamed=0x7f070012;
+        public static final int folder_deleted=0x7f070011;
+        public static final int folder_moved=0x7f070015;
+        public static final int folder_name=0x7f07000c;
+        public static final int folder_renamed=0x7f070013;
+        public static final int hello=0x7f070000;
+        public static final int l_artists=0x7f070039;
+        public static final int l_authors=0x7f070036;
+        public static final int l_credits=0x7f07003a;
+        public static final int l_documenters=0x7f070037;
+        public static final int l_info=0x7f07003c;
+        public static final int l_license=0x7f07003b;
+        public static final int l_translators=0x7f070038;
+        public static final int menu_about=0x7f070032;
+        public static final int menu_copy=0x7f07000a;
+        public static final int menu_delete=0x7f070005;
+        public static final int menu_move=0x7f070009;
+        public static final int menu_new_folder=0x7f070004;
+        public static final int menu_open=0x7f070008;
+        public static final int menu_preferences=0x7f070031;
+        public static final int menu_rename=0x7f070006;
+        public static final int menu_send=0x7f070007;
+        public static final int move_button=0x7f070018;
+        public static final int move_title=0x7f070017;
+        public static final int no_information_available=0x7f07003d;
+        public static final int preferences_activity_name=0x7f070034;
+        public static final int really_delete=0x7f07000f;
+        public static final int send_not_available=0x7f070027;
+        public static final int this_folder_is_empty=0x7f07000e;
+    }
+    public static final class xml {
+        public static final int mimetypes=0x7f040000;
     }
 }

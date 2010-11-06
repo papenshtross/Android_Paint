@@ -1,0 +1,30 @@
+The editor shall be able to deal with lines, circles and polygons. The drawing of them may
+preferably be based on suitable routines in OpenGL. As an alternative you may define and
+implement your own routines.
+
+For the three mentioned output primitives, the following operations shall be defined:
+
+   - removal
+   - translation
+   - scaling
+   - reflection in an arbitrary line (optional)
+   - rotation about an arbitrary point
+
+The operations only have to be performed on one object at a time. Every object shall be drawn
+with a colour chosen from the colour palette (see below).
+
+Zooming is another operation to be included by defining a window (preferably by using the
+rubber band method) corresponding to a part of the display. The contents of the window shall be
+redrawn magnified so that the whole screen (drawing area) is filled. To handle this clipping has
+to be done. The zooming is only required for one level but, of course, the original image must be
+possible to regenerate. Preferably, all drawing and editing operations shall be possible to use also
+within the zoom window, but this is not required.
+
+The interactive dialogue shall be realised by positioning the screen cursor, which means that also
+a simple screen menu or so called buttons are necessary to include. For this purpose your own
+routines shall be implemented but, again, you may take advantage of the facilities in OpenGL.
+Furthermore, each time an object is selected some kind of suitable feedback (e.g. a colour
+change) shall occur to emphasise that the correct object has been selected.
+
+A colour palette with a limited number of colours shall be included. The chosen colour shall be
+displayed before it is used. As an option, the chosen colour can be used for filling a polygon.

@@ -1,0 +1,25 @@
+Samples:
+http://www.dailymotion.com/video/xe6su9_doodledroid-for-the-android-review_tech
+
+- R- application store facade (factory);
+- R - remove or add welcome screen;
+- ? - cooperative mode (using BlueTooth, can be used BlueTooth emulation library and sample from APIDemos);
+- M - kids mode (random colors, brushes, etc.);
+- ? - movie mode (save sequence of actions and then apply one by one, movie effect);
+- ? - background color changing;
+- R - colored icons integration;
+- M - shake feature (need integration and testing. See ShakeActivity class);
+- R - operation menus update (context and system menus);
+- R - brush chooser (solid, gradient, etc.);
+- ? - geometric figures and text;
+- R - color picker and other windows as dialogs;
+- ? - status bar with selected color, brush, etc.
+- M - update About dialog;
+- M - complete open/save (concrete file types, filtering) operations;
+- M,R - share functionality: facebook, mms, email, another applications;
+- R - history, undo and redo;
+- ? - figure manipulation: select, move, delete, resize, rotate, copy-paste;
+    http://www.zdnet.com/blog/burnette/how-to-use-multi-touch-in-android-2-part-4-setting-up-for-image-transformation/1785?tag=mantle_skin;content
+    http://android-developers.blogspot.com/2010/06/making-sense-of-multitouch.html
+- M - options (shake feature enable/disable, save state on exit etc.);
+- ? - brightness changing and other options;
