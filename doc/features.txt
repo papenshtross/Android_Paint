@@ -1,7 +1,8 @@
 Samples:
 http://www.dailymotion.com/video/xe6su9_doodledroid-for-the-android-review_tech
 
-- R- application store facade (factory);
+-   - take picture from camera;
+- R - application store facade (factory);
 - R - remove or add welcome screen;
 - ? - cooperative mode (using BlueTooth, can be used BlueTooth emulation library and sample from APIDemos);
 - M - kids mode (random colors, brushes, etc.);
