@@ -67,33 +67,6 @@ public class PaintAreaActivity extends GraphicsActivity
         //restorePaintAreaState();
     }
 
-    private void sendBitmapImage(){
-
-        // TODO: progress bar
-
-        Boolean isOk = FileUtils.saveLocalImage(this, paintView.getDrawableBitmap(),
-                FileUtils.SHARE_TEMP_FILE_NAME, false);
-
-        if(isOk){
-            try{
-            Uri tmpFileUri = FileUtils.getLocalImagePath(this, FileUtils.SHARE_TEMP_FILE_NAME);
-
-            if(tmpFileUri != null){
-                Intent intent = new Intent();
-                intent.setType("image/jpeg");
-                intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_STREAM, tmpFileUri);
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                startActivity(Intent.createChooser(intent,"Send Image To:"));
-            }
-        }
-        catch(Exception ex){
-            WarningAlert.show(this, "Cannot restore paint area: " + ex.getMessage());
-            ex.printStackTrace();
-        }
-        }
-    }
-
     private void restorePaintAreaState(){
 
         try{
@@ -286,6 +259,9 @@ public class PaintAreaActivity extends GraphicsActivity
     private static final int BRUSH_WIDTH_MENU_ID = Menu.FIRST + 20;
     private static final int FIGURE_MENU_ID = Menu.FIRST + 21;
 
+    private static final int SHARE_FACEBOOK_MENU_ID = Menu.FIRST + 22;
+    private static final int SHARE_OTHER_MENU_ID = Menu.FIRST + 23;
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view,
                                     ContextMenu.ContextMenuInfo menuInfo) {
@@ -311,7 +287,13 @@ public class PaintAreaActivity extends GraphicsActivity
         drawingItem.add(0, CLEAR_SHAPE_MENU_ID, 0, "Clear");
 
         menu.add(0, CHILD_MODE_MENU_ID, 0, "Child Mode").setIcon(R.drawable.happy);
-        menu.add(0, SHARE_MENU_ID, 0, "Share").setIcon(android.R.drawable.ic_menu_share);
+
+        SubMenu shareItem = menu.addSubMenu(0, SHARE_MENU_ID, 0, "Share")
+                .setIcon(android.R.drawable.ic_menu_share);
+
+        shareItem.add(0, SHARE_FACEBOOK_MENU_ID, 0, "Facebook");
+        shareItem.add(0, SHARE_OTHER_MENU_ID, 0, "Other...");
+
         menu.add(0, OPEN_FILE_MENU_ID, 0, "Open").setIcon(R.drawable.ic_menu_archive);
         menu.add(0, SAVE_FILE_MENU_ID, 0, "Save").setIcon(android.R.drawable.ic_menu_save);
         menu.add(0, PREFERENCES_MENU_ID, 0, "Preferences").setIcon(android.R.drawable.ic_menu_preferences);
@@ -562,10 +544,70 @@ public class PaintAreaActivity extends GraphicsActivity
                 return true;
             }
             case SHARE_MENU_ID: {
-                sendBitmapImage();
+                // TODO: Add dynamic subitems list composition
+                return true;
+            }
+            case SHARE_FACEBOOK_MENU_ID: {
+                shareImageOnFacebook();
+                return true;
+            }
+            case SHARE_OTHER_MENU_ID: {
+                shareImageTo();
                 return true;
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void shareImageOnFacebook(){
+
+        // TODO: progress bar
+
+        Boolean isOk = FileUtils.saveLocalImage(this, paintView.getDrawableBitmap(),
+                FileUtils.SHARE_TEMP_FILE_NAME, false);
+
+        if(isOk){
+            try{
+                Uri tmpFileUri = FileUtils.getLocalImagePath(this, FileUtils.SHARE_TEMP_FILE_NAME);
+
+                if(tmpFileUri != null){
+
+                    // TODO: incorporate Facebook integration
+
+                }
+            }
+            catch(Exception ex){
+                WarningAlert.show(this, "Cannot share image on facebook: " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        }
+
+    }
+
+    private void shareImageTo(){
+
+        // TODO: progress bar
+
+        Boolean isOk = FileUtils.saveLocalImage(this, paintView.getDrawableBitmap(),
+                FileUtils.SHARE_TEMP_FILE_NAME, false);
+
+        if(isOk){
+            try{
+                Uri tmpFileUri = FileUtils.getLocalImagePath(this, FileUtils.SHARE_TEMP_FILE_NAME);
+
+                if(tmpFileUri != null){
+                    Intent intent = new Intent();
+                    intent.setType("image/jpeg");
+                    intent.setAction(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_STREAM, tmpFileUri);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    startActivity(Intent.createChooser(intent,"Share Image..."));
+                }
+            }
+            catch(Exception ex){
+                WarningAlert.show(this, "Cannot share image to other application: " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        }
     }
 }
