@@ -571,9 +571,7 @@ public class PaintAreaActivity extends GraphicsActivity
                 Uri tmpFileUri = FileUtils.getLocalImagePath(this, FileUtils.SHARE_TEMP_FILE_NAME);
 
                 if(tmpFileUri != null){
-
-                    // TODO: incorporate Facebook integration
-
+                   startActivity(new Intent(this, FBActivity.class));
                 }
             }
             catch(Exception ex){

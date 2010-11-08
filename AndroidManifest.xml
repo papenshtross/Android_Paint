@@ -34,6 +34,14 @@
         <activity android:name="org.openintents.filemanager.FileManagerActivity"/>
         <activity android:name="org.openintents.about.AboutActivity"/>
         <activity android:name=".PreferencesActivity"/>
+        <activity android:name="com.codecarpet.fbconnect.FBLoginActivity"
+			android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+		<activity android:name="com.codecarpet.fbconnect.FBPermissionActivity"
+			android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+		<activity android:name="com.codecarpet.fbconnect.FBFeedActivity"
+			android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <activity android:name=".FBActivity"/>
         <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+        <uses-permission android:name="android.permission.INTERNET"/>
     </application>
 </manifest>

@@ -23,6 +23,8 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
+        public static final int black=0x7f020010;
+        public static final int cyan=0x7f02000f;
         public static final int happy=0x7f020000;
         public static final int ic_launcher_folder=0x7f020001;
         public static final int ic_launcher_folder_open=0x7f020002;
@@ -41,35 +43,39 @@ public final class R {
     }
     public static final class id {
         public static final int background=0x7f080017;
-        public static final int button_directory_pick=0x7f080020;
-        public static final int button_pick=0x7f080022;
+        public static final int button_directory_pick=0x7f080024;
+        public static final int button_pick=0x7f080026;
         public static final int colorcircle=0x7f080019;
-        public static final int directory_buttons=0x7f08001d;
-        public static final int directory_input=0x7f08001e;
-        public static final int directory_text=0x7f08001f;
-        public static final int empty=0x7f080023;
-        public static final int empty_text=0x7f080024;
+        public static final int directory_buttons=0x7f080021;
+        public static final int directory_input=0x7f080022;
+        public static final int directory_text=0x7f080023;
+        public static final int empty=0x7f080027;
+        public static final int empty_text=0x7f080028;
         public static final int et_artists=0x7f080013;
         public static final int et_authors=0x7f08000d;
         public static final int et_documenters=0x7f08000f;
         public static final int et_license=0x7f080016;
         public static final int et_translators=0x7f080011;
-        public static final int filename=0x7f080021;
+        public static final int feedButton=0x7f080020;
+        public static final int filename=0x7f080025;
         public static final int foldername=0x7f08001c;
         public static final int foldernametext=0x7f08001b;
         public static final int i_email=0x7f080008;
         public static final int i_logo=0x7f080002;
-        public static final int icon=0x7f080026;
-        public static final int info=0x7f080028;
+        public static final int icon=0x7f08002a;
+        public static final int info=0x7f08002c;
         public static final int l_artists=0x7f080012;
         public static final int l_authors=0x7f08000c;
         public static final int l_documenters=0x7f08000e;
         public static final int l_translators=0x7f080010;
+        public static final int label=0x7f08001e;
         public static final int ll_credits=0x7f08000b;
         public static final int ll_email=0x7f080007;
         public static final int ll_info=0x7f080001;
+        public static final int login=0x7f08001d;
+        public static final int permissionButton=0x7f08001f;
         public static final int saturation=0x7f080018;
-        public static final int scan_progress=0x7f080025;
+        public static final int scan_progress=0x7f080029;
         public static final int sv_credits=0x7f08000a;
         public static final int sv_info=0x7f080000;
         public static final int sv_license=0x7f080015;
@@ -78,7 +84,7 @@ public final class R {
         public static final int t_email=0x7f080009;
         public static final int t_program_name_and_version=0x7f080003;
         public static final int t_website=0x7f080005;
-        public static final int text=0x7f080027;
+        public static final int text=0x7f08002b;
         public static final int tv_no_information=0x7f080014;
         public static final int value=0x7f08001a;
     }
@@ -86,9 +92,10 @@ public final class R {
         public static final int about=0x7f030000;
         public static final int colorpicker=0x7f030001;
         public static final int dialog_new_folder=0x7f030002;
-        public static final int filelist=0x7f030003;
-        public static final int filelist_item=0x7f030004;
-        public static final int main=0x7f030005;
+        public static final int facebook=0x7f030003;
+        public static final int filelist=0x7f030004;
+        public static final int filelist_item=0x7f030005;
+        public static final int main=0x7f030006;
     }
     public static final class raw {
         public static final int license_short=0x7f050000;
@@ -127,6 +134,9 @@ public final class R {
         public static final int error_moving_folder=0x7f070023;
         public static final int error_renaming_file=0x7f070020;
         public static final int error_renaming_folder=0x7f070021;
+        /** Facebook integration 
+         */
+        public static final int fb_app_name=0x7f07003e;
         public static final int file_copied=0x7f070016;
         public static final int file_deleted=0x7f070010;
         public static final int file_moved=0x7f070014;
@@ -136,6 +146,7 @@ public final class R {
         public static final int folder_moved=0x7f070015;
         public static final int folder_name=0x7f07000c;
         public static final int folder_renamed=0x7f070013;
+        public static final int get_permission=0x7f07003f;
         public static final int hello=0x7f070000;
         public static final int l_artists=0x7f070039;
         public static final int l_authors=0x7f070036;
@@ -157,6 +168,7 @@ public final class R {
         public static final int move_title=0x7f070017;
         public static final int no_information_available=0x7f07003d;
         public static final int preferences_activity_name=0x7f070034;
+        public static final int publish_to_feed=0x7f070040;
         public static final int really_delete=0x7f07000f;
         public static final int send_not_available=0x7f070027;
         public static final int this_folder_is_empty=0x7f07000e;

@@ -73,6 +73,11 @@
 	<string name="l_info">General Info</string>
 
 	<string name="no_information_available">No information available.</string>
+
+    <!--Facebook integration -->
+    <string name="fb_app_name">FB Connect</string>
+    <string name="get_permission">Get Permission</string>
+    <string name="publish_to_feed">Publish To Feed</string>
 </resources>
 
 
