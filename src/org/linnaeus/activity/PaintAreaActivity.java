@@ -8,6 +8,7 @@ import android.graphics.*;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.*;
+import org.linnaeus.AppPreferences;
 import org.linnaeus.ShakeManager;
 import org.linnaeus.dialog.ColorPickerDialog;
 import org.linnaeus.drawing.*;
@@ -28,10 +29,13 @@ public class PaintAreaActivity extends GraphicsActivity
 
     private PaintCanvas paintView;
     private ShakeManager _shakeManager;
+    private AppPreferences _preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        _preferences = AppPreferences.getAppPreferences(this);
 
         paintView = new PaintCanvas(this);
         setContentView(paintView);
@@ -54,12 +58,18 @@ public class PaintAreaActivity extends GraphicsActivity
 
         _shakeManager = new ShakeManager(this);
         _shakeManager.addListener(this);
-        restorePaintAreaState();
+
+        if(_preferences.isSaveStateOnExit()){
+            restorePaintAreaState();
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState){
-        savePaintAreaState();
+
+        if(_preferences.isSaveStateOnExit()){
+            savePaintAreaState();
+        }
     }
 
     @Override
@@ -120,6 +130,11 @@ public class PaintAreaActivity extends GraphicsActivity
 
     @Override
     public void onShakeEvent() {
+
+        // TODO: add smart shake mamager initialization.
+        if(!_preferences.isShakeFeatureEnabled()){
+            return;
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
