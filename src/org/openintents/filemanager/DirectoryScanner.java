@@ -33,6 +33,9 @@ public class DirectoryScanner extends Thread {
     private MimeTypes mMimeTypes;
 	private Handler handler;
 	private long operationStartTime;
+
+    // TODO: MX: add as input parameter.
+    private boolean skipHidden = true;
 	
 	// Update progress bar every n files
 	static final private int PROGRESS_STEPS = 50;
@@ -109,7 +112,12 @@ public class DirectoryScanner extends Thread {
 		
 		if (files != null) {
 			for (File currentFile : files){ 
-				if (cancel) {
+
+                if(currentFile.isHidden() && skipHidden){
+                    continue;
+                }
+
+                if (cancel) {
 					// Abort!
 					Log.v(TAG, "Scan aborted while checking files");
 					clearData();

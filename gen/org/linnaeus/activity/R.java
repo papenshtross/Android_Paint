@@ -28,13 +28,15 @@ public final class R {
         public static final int ic_launcher_folder_open=0x7f020002;
         public static final int ic_launcher_home=0x7f020003;
         public static final int ic_launcher_home_small=0x7f020004;
-        public static final int ic_menu_back_small=0x7f020005;
-        public static final int ic_menu_forward_small=0x7f020006;
-        public static final int ic_menu_info_details=0x7f020007;
-        public static final int icon=0x7f020008;
-        public static final int icon_file=0x7f020009;
-        public static final int icon_sdcard=0x7f02000a;
-        public static final int icon_sdcard_small=0x7f02000b;
+        public static final int ic_menu_archive=0x7f020005;
+        public static final int ic_menu_back_small=0x7f020006;
+        public static final int ic_menu_forward_small=0x7f020007;
+        public static final int ic_menu_info_details=0x7f020008;
+        public static final int icon=0x7f020009;
+        public static final int icon_file=0x7f02000a;
+        public static final int icon_sdcard=0x7f02000b;
+        public static final int icon_sdcard_small=0x7f02000c;
+        public static final int light=0x7f02000d;
     }
     public static final class id {
         public static final int background=0x7f080017;

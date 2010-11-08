@@ -1,6 +1,7 @@
 Samples:
 http://www.dailymotion.com/video/xe6su9_doodledroid-for-the-android-review_tech
 
+-   - save/load settings on application restart;
 -   - take picture from camera;
 - R - application store facade (factory);
 - R - remove or add welcome screen;
@@ -14,7 +15,6 @@ http://www.dailymotion.com/video/xe6su9_doodledroid-for-the-android-review_tech
 - R - brush chooser (solid, gradient, etc.);
 - ? - geometric figures and text;
 - R - color picker and other windows as dialogs;
-- ? - status bar with selected color, brush, etc.
 - M - update About dialog;
 - M - complete open/save (concrete file types, filtering) operations;
 - M,R - share functionality: facebook, mms, email, another applications;

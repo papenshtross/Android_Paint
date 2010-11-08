@@ -47,7 +47,6 @@ import android.text.TextUtils;
 import android.text.util.Linkify;
 import android.text.util.Linkify.TransformFilter;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,7 +59,7 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 
 /**
- * Main AboutActivity dialog activity.
+ * MainActivity AboutActivity dialog activity.
  * 
  * @author pjv
  *
@@ -648,8 +647,8 @@ public class AboutActivity extends TabActivity {
 		super.onCreateOptionsMenu(menu);
 
 		//AboutActivity action
-		menu.add(ContextMenu.NONE, MENU_ITEM_ABOUT, ContextMenu.NONE,
-				R.string.menu_about).setIcon(R.drawable.ic_menu_info_details);
+		//menu.add(ContextMenu.NONE, MENU_ITEM_ABOUT, ContextMenu.NONE,
+		//		R.string.menu_about).setIcon(R.drawable.ic_menu_info_details);
 
 		// Generate any additional actions that can be performed on the
 		// overall list. In a normal install, there are no additional

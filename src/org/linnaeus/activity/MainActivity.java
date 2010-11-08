@@ -9,7 +9,7 @@ import android.os.Bundle;
  * User: Romchig
  * Date: 29.10.2010
  */
-public class Main extends Activity {
+public class MainActivity extends Activity {
     /**
      * Called when the activity is first created.
      */
@@ -17,6 +17,6 @@ public class Main extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        startActivity(new Intent(this, PaintArea.class));
+        startActivity(new Intent(this, PaintAreaActivity.class));
     }
 }

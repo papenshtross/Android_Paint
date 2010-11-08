@@ -22,16 +22,18 @@
                        android:resource="@raw/license_short" />
         <meta-data android:name="org.openintents.metadata.EMAIL"
                        android:value="@string/about_email" />
-        <activity android:name=".Main">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".PaintArea"/>
+        <activity android:name=".PaintAreaActivity"/>
         <activity android:name="org.openintents.colorpicker.ColorPickerActivity"
                   android:label="@string/color_picker"/>
         <activity android:name="org.openintents.filemanager.FileManagerActivity"/>
         <activity android:name="org.openintents.about.AboutActivity"/>
+        <activity android:name=".PreferencesActivity"/>
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     </application>
 </manifest>
