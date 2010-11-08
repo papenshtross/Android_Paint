@@ -37,6 +37,7 @@ public final class R {
         public static final int icon_sdcard=0x7f02000b;
         public static final int icon_sdcard_small=0x7f02000c;
         public static final int light=0x7f02000d;
+        public static final int splash=0x7f02000e;
     }
     public static final class id {
         public static final int background=0x7f080017;

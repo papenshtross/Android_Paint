@@ -2,6 +2,7 @@ package org.linnaeus.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Environment;
 import android.widget.Toast;
 
@@ -16,9 +17,49 @@ import java.io.IOException;
  * Date: 07.11.10
  * Time: 21:17
  */
+
 public class FileUtils {
 
-    public static Boolean saveTempImageOnSDCard(
+    public static final String STATE_TEMP_FILE_NAME = "tmpImage.jpg";
+    public static final String SHARE_TEMP_FILE_NAME = "shareImage.jpg";
+
+    public static Uri getLocalImagePath(Context context, String fileName){
+        File file = context.getFileStreamPath(fileName);
+
+        return file.exists() ? Uri.fromFile(file) : null;
+    }
+
+    public static Boolean saveLocalImage(
+                Context context, Bitmap bitmap, String fileName, Boolean suppressErrors){
+
+        Bitmap bitmapImage = Bitmap.createBitmap(bitmap);
+
+        FileOutputStream fos;
+
+        try {
+            fos = context.openFileOutput(fileName, Context.MODE_WORLD_READABLE);
+            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+            return true;
+        }
+        catch(FileNotFoundException ex){
+            if(!suppressErrors) {
+                WarningAlert.show(context, "Cannot save image file: " + ex.getMessage());
+            }
+            ex.printStackTrace();
+            return false;
+        }
+        catch(IOException ex){
+            if(!suppressErrors) {
+                WarningAlert.show(context, "Cannot save image file: " + ex.getMessage());
+            }
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    public static Boolean saveSDCardImage(
             Context context, Bitmap bitmap, String fileName, Boolean suppressErrors){
 
         try{
@@ -56,6 +97,7 @@ public class FileUtils {
                 bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fos);
                 fos.flush();
                 fos.close();
+                return true;
             }
             catch(FileNotFoundException ex){
                 if(!suppressErrors) {
@@ -79,8 +121,6 @@ public class FileUtils {
             ex.printStackTrace();
             return false;
         }
-
-        return true;
     }
 
     public static Boolean saveImage(Context context, Bitmap bitmap, String filePath){
@@ -102,6 +142,7 @@ public class FileUtils {
                 bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fos);
                 fos.flush();
                 fos.close();
+                return true;
             }
             catch(FileNotFoundException ex){
                 WarningAlert.show(context, "Cannot save image file: " + ex.getMessage());
@@ -119,7 +160,5 @@ public class FileUtils {
             ex.printStackTrace();
             return false;
          }
-
-        return true;
     }
 }

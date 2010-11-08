@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hello">Hello World, Lop!</string>
-    <string name="app_name">2D Graphical Editor</string>
+    <string name="app_name">Salmon Paint v0.8</string>
 
     <!-- openintents -->
     <string name="about_translators">translator-credits</string>
