@@ -23,26 +23,34 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int black=0x7f020010;
-        public static final int cyan=0x7f02000f;
-        public static final int happy=0x7f020000;
-        public static final int ic_launcher_folder=0x7f020001;
-        public static final int ic_launcher_folder_open=0x7f020002;
-        public static final int ic_launcher_home=0x7f020003;
-        public static final int ic_launcher_home_small=0x7f020004;
-        public static final int ic_menu_archive=0x7f020005;
-        public static final int ic_menu_back_small=0x7f020006;
-        public static final int ic_menu_forward_small=0x7f020007;
-        public static final int ic_menu_info_details=0x7f020008;
-        public static final int icon=0x7f020009;
-        public static final int icon_file=0x7f02000a;
-        public static final int icon_sdcard=0x7f02000b;
-        public static final int icon_sdcard_small=0x7f02000c;
-        public static final int light=0x7f02000d;
-        public static final int splash=0x7f02000e;
+        public static final int black=0x7f020013;
+        public static final int color_picker=0x7f020000;
+        public static final int cyan=0x7f020012;
+        public static final int happy=0x7f020001;
+        public static final int ic_launcher_folder=0x7f020002;
+        public static final int ic_launcher_folder_open=0x7f020003;
+        public static final int ic_launcher_home=0x7f020004;
+        public static final int ic_launcher_home_small=0x7f020005;
+        public static final int ic_menu_archive=0x7f020006;
+        public static final int ic_menu_back_small=0x7f020007;
+        public static final int ic_menu_compose=0x7f020008;
+        public static final int ic_menu_forward_small=0x7f020009;
+        public static final int ic_menu_info_details=0x7f02000a;
+        public static final int ic_menu_revert=0x7f02000b;
+        public static final int icon=0x7f02000c;
+        public static final int icon_file=0x7f02000d;
+        public static final int icon_sdcard=0x7f02000e;
+        public static final int icon_sdcard_small=0x7f02000f;
+        public static final int light=0x7f020010;
+        public static final int splash=0x7f020011;
     }
     public static final class id {
         public static final int background=0x7f080017;
+        public static final int btn_brush=0x7f080030;
+        public static final int btn_child=0x7f080033;
+        public static final int btn_color=0x7f08002f;
+        public static final int btn_redo=0x7f080032;
+        public static final int btn_undo=0x7f080031;
         public static final int button_directory_pick=0x7f080024;
         public static final int button_pick=0x7f080026;
         public static final int colorcircle=0x7f080019;
@@ -73,6 +81,8 @@ public final class R {
         public static final int ll_email=0x7f080007;
         public static final int ll_info=0x7f080001;
         public static final int login=0x7f08001d;
+        public static final int paint_view_layout=0x7f08002d;
+        public static final int paint_view_menu=0x7f08002e;
         public static final int permissionButton=0x7f08001f;
         public static final int saturation=0x7f080018;
         public static final int scan_progress=0x7f080029;
@@ -96,6 +106,7 @@ public final class R {
         public static final int filelist=0x7f030004;
         public static final int filelist_item=0x7f030005;
         public static final int main=0x7f030006;
+        public static final int paint_area=0x7f030007;
     }
     public static final class raw {
         public static final int license_short=0x7f050000;
