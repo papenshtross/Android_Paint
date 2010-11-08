@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:title="Set alarm">
+    <CheckBoxPreference android:key="save_state"
+                        android:persistent="false"
+                        android:title="Save state on exit" />
+    <CheckBoxPreference android:key="shake_feature"
+                        android:persistent="false"
+                        android:title="Clear drawing on shake" />
+</PreferenceScreen>
