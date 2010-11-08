@@ -5,13 +5,21 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.*;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.*;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import org.linnaeus.AppPreferences;
 import org.linnaeus.ShakeManager;
+import org.linnaeus.actions.*;
+import org.linnaeus.actions.ShareToAction;
+import org.linnaeus.bean.PaintAction;
 import org.linnaeus.dialog.ColorPickerDialog;
 import org.linnaeus.drawing.*;
 import org.linnaeus.utils.FileUtils;
+import org.linnaeus.utils.ImageRotator;
 import org.linnaeus.utils.WarningAlert;
 import org.openintents.about.AboutActivity;
 import org.openintents.colorpicker.ColorPickerActivity;
@@ -21,20 +29,26 @@ import org.openintents.intents.ColorPickerIntents;
 import org.openintents.intents.FileManagerIntents;
 
 import java.io.File;
+import java.util.Stack;
 
 public class PaintAreaActivity extends GraphicsActivity
         implements ColorPickerDialog.OnColorChangedListener,
         ShakeManager.ShakeEventListener {
 
-    private PaintCanvas paintView;
+    private PaintView _paintView;
     private ShakeManager _shakeManager;
+    private AppPreferences _preferences;
+    private Stack<PaintAction> paintActions;
+    private int currentAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        paintActions = new Stack<PaintAction>();
 
-        paintView = new PaintCanvas(this);
-        setContentView(paintView);
+        _preferences = AppPreferences.getAppPreferences(this);
+
+        initPaintViewLayout();
 
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -50,48 +64,76 @@ public class PaintAreaActivity extends GraphicsActivity
 
         mBlur = new BlurMaskFilter(8, BlurMaskFilter.Blur.NORMAL);
 
-        registerForContextMenu(paintView);
+        registerForContextMenu(_paintView);
 
         _shakeManager = new ShakeManager(this);
         _shakeManager.addListener(this);
-        restorePaintAreaState();
+
+        if (_preferences.isSaveStateOnExit()) {
+            new RestorePaintViewAction().doAction(this, _paintView);
+        }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState){
-        savePaintAreaState();
-    }
+    private void initPaintViewLayout() {
 
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState){
-        //restorePaintAreaState();
-    }
+        _paintView = new PaintView(this);
 
-    private void restorePaintAreaState(){
+        setContentView(R.layout.paint_area);
 
-        try{
-            Uri tmpFileUri = FileUtils.getLocalImagePath(this, FileUtils.STATE_TEMP_FILE_NAME);
+        LinearLayout layout = (LinearLayout) findViewById(R.id.paint_view_layout);
+        layout.addView(_paintView);
 
-            if(tmpFileUri != null){
-                Bitmap bitmapImage = BitmapFactory.decodeFile(tmpFileUri.getPath());
-                paintView.setDrawableBitmap(bitmapImage);
+        ImageButton btnColor = (ImageButton) findViewById(R.id.btn_color);
+        btnColor.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PaintAreaActivity.this, ColorPickerActivity.class);
+                startActivityForResult(intent, COLOR_MENU_ID);
             }
-        }
-        catch(Exception ex){
-            WarningAlert.show(this, "Cannot restore paint area: " + ex.getMessage());
-            ex.printStackTrace();
+        });
+
+        ImageButton btnBrush = (ImageButton) findViewById(R.id.btn_brush);
+        btnBrush.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                onBrushMenuItemSelected();
+            }
+        });
+
+        ImageButton btnUndo = (ImageButton) findViewById(R.id.btn_undo);
+        btnUndo.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                redo();
+            }
+        });
+
+        ImageButton btnRedo = (ImageButton) findViewById(R.id.btn_redo);
+        BitmapDrawable bmd = ImageRotator.rotate(this, R.drawable.ic_menu_revert);
+        btnRedo.setImageDrawable(bmd);
+        btnRedo.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                undo();
+            }
+        });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+        if (_preferences.isSaveStateOnExit()) {
+            new SavePaintViewAction().doAction(this, _paintView);
         }
     }
 
-    private void savePaintAreaState(){
-        try{
-            FileUtils.saveLocalImage(this, paintView.getDrawableBitmap(),
-                    FileUtils.STATE_TEMP_FILE_NAME, true);
-        }
-        catch(Exception ex){
-            //WarningAlert.show(this, "Cannot save paint area: " + ex.getMessage());
-            ex.printStackTrace();
-        }
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        //new RestorePaintViewAction().doAction(this, _paintView);
     }
 
     @Override
@@ -121,28 +163,15 @@ public class PaintAreaActivity extends GraphicsActivity
     @Override
     public void onShakeEvent() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // TODO: add smart shake mamager initialization.
+        if (!_preferences.isShakeFeatureEnabled()) {
+            return;
+        }
 
-        builder.setMessage("Are you sure you want to clear drawing?")
-                .setCancelable(false)
-                .setTitle("Drawing shake")
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        paintView.onClear();
-                        dialog.cancel();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-
-        builder.create().show();
+        new OnShakeAction().doAction(this, _paintView);
     }
 
-    public class PaintCanvas extends View {
+    public class PaintView extends View {
 
         //private static final float MINP = 0.25f;
         //private static final float MAXP = 0.75f;
@@ -152,14 +181,16 @@ public class PaintAreaActivity extends GraphicsActivity
         private Shape mShape;
         private Paint mBitmapPaint;
 
-        public PaintCanvas(Context c) {
+        public PaintView(Context c) {
             super(c);
-
-            mBitmap = Bitmap.createBitmap(320, 480, Bitmap.Config.ARGB_8888);
+            // Initial size = 320x480
+            mBitmap = Bitmap.createBitmap(320, 360, Bitmap.Config.ARGB_8888);
             mCanvas = new Canvas(mBitmap);
             mCanvas.drawColor(0xFFFFFFFF);
             mShape = new PathShape();
             mBitmapPaint = new Paint(Paint.DITHER_FLAG);
+            paintActions.push(new PaintAction(Bitmap.createBitmap(mBitmap)));
+            currentAction = paintActions.size();
         }
 
         public void onNewShapeSelect(Shape shape) {
@@ -190,6 +221,11 @@ public class PaintAreaActivity extends GraphicsActivity
             canvas.drawColor(0xFFFFFFFF);
             canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
             mShape.draw(canvas, mPaint);
+        }
+
+        public void repaintAction(PaintAction paintAction) {
+            mCanvas.drawBitmap(paintAction.getBitmap(), 0, 0, mBitmapPaint);
+            invalidate();
         }
 
         private float mX, mY;
@@ -230,9 +266,16 @@ public class PaintAreaActivity extends GraphicsActivity
                 }
                 case MotionEvent.ACTION_UP: {
                     mShape.onTouchEvent((int) x, (int) y, action);
+                    if (currentAction < paintActions.size()) {
+                        for (int i = 0; i < paintActions.size() - currentAction; i++) {
+                            paintActions.removeElement(paintActions.size());
+                        }
+                    }
                     mShape.draw(mCanvas, mPaint);
                     mShape.reset();
                     invalidate();
+                    paintActions.push(new PaintAction(Bitmap.createBitmap(mBitmap)));
+                    currentAction = paintActions.size();
                     break;
                 }
             }
@@ -261,6 +304,8 @@ public class PaintAreaActivity extends GraphicsActivity
 
     private static final int SHARE_FACEBOOK_MENU_ID = Menu.FIRST + 22;
     private static final int SHARE_OTHER_MENU_ID = Menu.FIRST + 23;
+    private static final int REDO_MENU_ID = Menu.FIRST + 24;
+    private static final int UNDO_MENU_ID = Menu.FIRST + 25;
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view,
@@ -278,10 +323,8 @@ public class PaintAreaActivity extends GraphicsActivity
         super.onCreateOptionsMenu(menu);
 
         SubMenu drawingItem = menu.addSubMenu(0, DRAWING_MENU_ID, 0, "Drawing")
-                .setIcon(android.R.drawable.ic_menu_edit);
+                .setIcon(R.drawable.ic_menu_compose);
 
-        drawingItem.add(0, COLOR_MENU_ID, 0, "Color");
-        drawingItem.add(0, BRUSH_MENU_ID, 0, "Brush style");
         drawingItem.add(0, BRUSH_WIDTH_MENU_ID, 0, "Brush width");
         drawingItem.add(0, FIGURE_MENU_ID, 0, "Figure");
         drawingItem.add(0, CLEAR_SHAPE_MENU_ID, 0, "Clear");
@@ -303,12 +346,12 @@ public class PaintAreaActivity extends GraphicsActivity
     }
 
     private void onBrushWidthMenuItemSelected() {
-        final String[] items = new String[MAX_BRUSH_WIDTH_VALUE/BRUSH_VALUE_STEP];
-        for (int i = MIN_BRUSH_WIDTH_VALUE; i <= MAX_BRUSH_WIDTH_VALUE; i += BRUSH_VALUE_STEP){
-            items[i/BRUSH_VALUE_STEP - 1] = String.valueOf(i);
+        final String[] items = new String[MAX_BRUSH_WIDTH_VALUE / BRUSH_VALUE_STEP];
+        for (int i = MIN_BRUSH_WIDTH_VALUE; i <= MAX_BRUSH_WIDTH_VALUE; i += BRUSH_VALUE_STEP) {
+            items[i / BRUSH_VALUE_STEP - 1] = String.valueOf(i);
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select brush width");          
+        builder.setTitle("Select brush width");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 mPaint.setStrokeWidth(Float.valueOf(items[item]));
@@ -332,7 +375,7 @@ public class PaintAreaActivity extends GraphicsActivity
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Pick a brush style");
         builder.setItems(items, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {   
+            public void onClick(DialogInterface dialog, int item) {
                 switch (item) {
                     case 0: {
                         mPaint.setMaskFilter(null);
@@ -392,27 +435,27 @@ public class PaintAreaActivity extends GraphicsActivity
 
                 switch (item) {
                     case 0: {
-                        paintView.onNewShapeSelect(new PathShape());
+                        _paintView.onNewShapeSelect(new PathShape());
                         break;
                     }
                     case 1: {
-                        paintView.onNewShapeSelect(new RectShape());
+                        _paintView.onNewShapeSelect(new RectShape());
                         break;
                     }
                     case 2: {
-                        paintView.onNewShapeSelect(new RoundRectShape());
+                        _paintView.onNewShapeSelect(new RoundRectShape());
                         break;
                     }
                     case 3: {
-                        paintView.onNewShapeSelect(new OvalShape());
+                        _paintView.onNewShapeSelect(new OvalShape());
                         break;
                     }
                     case 4: {
-                        paintView.onNewShapeSelect(new TriangleShape());
+                        _paintView.onNewShapeSelect(new TriangleShape());
                         break;
                     }
                     case 5: {
-                        paintView.onNewShapeSelect(new DiamondShape());
+                        _paintView.onNewShapeSelect(new DiamondShape());
                         break;
                     }
                 }
@@ -451,7 +494,7 @@ public class PaintAreaActivity extends GraphicsActivity
                             WarningAlert.show(this, "Please select a valid image file.");
                         } else {
                             Bitmap bitmapImage = BitmapFactory.decodeFile(fileUri.getPath());
-                            paintView.setDrawableBitmap(bitmapImage);
+                            _paintView.setDrawableBitmap(bitmapImage);
                         }
                     }
                     catch (Exception ex) {
@@ -472,7 +515,7 @@ public class PaintAreaActivity extends GraphicsActivity
                         WarningAlert.show(this, "Please specify a valid image path.");
                     } else {
                         FileUtils.saveImage(this,
-                                paintView.getDrawableBitmap(), fileUri.getPath());
+                                _paintView.getDrawableBitmap(), fileUri.getPath());
                     }
                 }
                 break;
@@ -501,21 +544,12 @@ public class PaintAreaActivity extends GraphicsActivity
                 onBrushWidthMenuItemSelected();
                 return true;
             }
-            case BRUSH_MENU_ID: {
-                onBrushMenuItemSelected();
-                return true;
-            }
             case FIGURE_MENU_ID: {
                 onFigureMenuItemSelected();
                 return true;
             }
-            case COLOR_MENU_ID: {
-                Intent intent = new Intent(this, ColorPickerActivity.class);
-                startActivityForResult(intent, COLOR_MENU_ID);
-                return true;
-            }
             case CLEAR_SHAPE_MENU_ID: {
-                paintView.onClear();
+                _paintView.onClear();
                 break;
             }
             case OPEN_FILE_MENU_ID: {
@@ -548,64 +582,28 @@ public class PaintAreaActivity extends GraphicsActivity
                 return true;
             }
             case SHARE_FACEBOOK_MENU_ID: {
-                shareImageOnFacebook();
+                new FacebookShareAction().doAction(this, _paintView);
                 return true;
             }
             case SHARE_OTHER_MENU_ID: {
-                shareImageTo();
+                new ShareToAction().doAction(this, _paintView);
                 return true;
             }
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void shareImageOnFacebook(){
-
-        // TODO: progress bar
-
-        Boolean isOk = FileUtils.saveLocalImage(this, paintView.getDrawableBitmap(),
-                FileUtils.SHARE_TEMP_FILE_NAME, false);
-
-        if(isOk){
-            try{
-                Uri tmpFileUri = FileUtils.getLocalImagePath(this, FileUtils.SHARE_TEMP_FILE_NAME);
-
-                if(tmpFileUri != null){
-                   startActivity(new Intent(this, FBActivity.class));
-                }
-            }
-            catch(Exception ex){
-                WarningAlert.show(this, "Cannot share image on facebook: " + ex.getMessage());
-                ex.printStackTrace();
-            }
+    private void undo() {
+        if (currentAction < paintActions.size()) {
+            _paintView.repaintAction(paintActions.get(currentAction));
+            currentAction++;
         }
-
     }
 
-    private void shareImageTo(){
-
-        // TODO: progress bar
-
-        Boolean isOk = FileUtils.saveLocalImage(this, paintView.getDrawableBitmap(),
-                FileUtils.SHARE_TEMP_FILE_NAME, false);
-
-        if(isOk){
-            try{
-                Uri tmpFileUri = FileUtils.getLocalImagePath(this, FileUtils.SHARE_TEMP_FILE_NAME);
-
-                if(tmpFileUri != null){
-                    Intent intent = new Intent();
-                    intent.setType("image/jpeg");
-                    intent.setAction(Intent.ACTION_SEND);
-                    intent.putExtra(Intent.EXTRA_STREAM, tmpFileUri);
-                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    startActivity(Intent.createChooser(intent,"Share Image..."));
-                }
-            }
-            catch(Exception ex){
-                WarningAlert.show(this, "Cannot share image to other application: " + ex.getMessage());
-                ex.printStackTrace();
-            }
+    private void redo() {
+        if (currentAction > 1) {
+            currentAction--;
+            _paintView.repaintAction(paintActions.get(currentAction - 1));
         }
     }
 }

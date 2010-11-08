@@ -83,20 +83,20 @@ public class FBActivity extends Activity {
         _permissionButton = (Button) findViewById(R.id.permissionButton);
         _permissionButton.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				askPermission();
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                askPermission();
+            }
+        });
 
         _feedButton = (Button) findViewById(R.id.feedButton);
         _feedButton.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View arg0) {
-				publishFeed();
-			}
-		});
+            @Override
+            public void onClick(View arg0) {
+                publishFeed();
+            }
+        });
 
         _loginButton = (FBLoginButton) findViewById(R.id.login);
         _loginButton.setStyle(FBLoginButtonStyle.FBLoginButtonStyleWide);
@@ -111,25 +111,25 @@ public class FBActivity extends Activity {
     private void askPermission() {
         Intent intent = new Intent(this, FBPermissionActivity.class);
         intent.putExtra("permissions", new String[]{"publish_stream"});
-        this.startActivityForResult(intent, PERMISSIONREQUESTCODE );
+        this.startActivityForResult(intent, PERMISSIONREQUESTCODE);
     }
 
     @Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
-		super.onActivityResult(requestCode, resultCode, data);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
 
-		switch (requestCode){
-		case PERMISSIONREQUESTCODE:
-			if (resultCode == 1)
-				_permissionButton.setVisibility(View.INVISIBLE);
-        default:
-        	return;
-		}
+        switch (requestCode) {
+            case PERMISSIONREQUESTCODE:
+                if (resultCode == 1)
+                    _permissionButton.setVisibility(View.INVISIBLE);
+            default:
+                return;
+        }
 
-	}
+    }
 
-	private void publishFeed() {
+    private void publishFeed() {
         Intent intent = new Intent(this, FBFeedActivity.class);
         intent.putExtra("userMessagePrompt", "Example prompt");
         intent.putExtra("attachment", "{\"name\":\"Facebook Connect for Android\",\"href\":\"http://code.google.com/p/fbconnect-android/\",\"caption\":\"Caption\",\"description\":\"Description\",\"media\":[{\"type\":\"image\",\"src\":\"http://img40.yfrog.com/img40/5914/iphoneconnectbtn.jpg\",\"href\":\"http://developers.facebook.com/connect.php?tab=iphone/\"}],\"properties\":{\"another link\":{\"text\":\"Facebook home page\",\"href\":\"http://www.facebook.com\"}}}");
@@ -141,30 +141,30 @@ public class FBActivity extends Activity {
     private class FBDialogDelegateImpl extends FBDialogDelegate {
 
         @Override
-		public void didFailWithError(FBDialog dialog, Throwable error) {
+        public void didFailWithError(FBDialog dialog, Throwable error) {
             _label.setText(error.toString());
         }
 
     }
 
     private void checkPermission() {
-    	String fql = "select publish_stream from permissions where uid == " + String.valueOf(_session.getUid());
-		Map<String, String> params = Collections.singletonMap("query", fql);
-		FBRequest.requestWithDelegate(new FBHasPermissionRD()).call("facebook.fql.query", params);
-	}
+        String fql = "select publish_stream from permissions where uid == " + String.valueOf(_session.getUid());
+        Map<String, String> params = Collections.singletonMap("query", fql);
+        FBRequest.requestWithDelegate(new FBHasPermissionRD()).call("facebook.fql.query", params);
+    }
 
     private class FBSessionDelegateImpl extends FBSessionDelegate {
 
         @Override
-		public void session_didLogin(FBSession session, Long uid) {
+        public void session_didLogin(FBSession session, Long uid) {
             // we check if the user already has the permissions before displaying permission button
-        	checkPermission();
+            checkPermission();
 
-        	mHandler.post(new Runnable() {
+            mHandler.post(new Runnable() {
                 public void run() {
                     _feedButton.setVisibility(View.VISIBLE);
                 }
-             });
+            });
 
             String fql = "select uid,name from user where uid == " + session.getUid();
 
@@ -173,15 +173,14 @@ public class FBActivity extends Activity {
         }
 
 
-
-		@Override
-		public void sessionDidLogout(FBSession session) {
+        @Override
+        public void sessionDidLogout(FBSession session) {
             mHandler.post(new Runnable() {
-               public void run() {
-                   _label.setText("");
-                   _permissionButton.setVisibility(View.INVISIBLE);
-                   _feedButton.setVisibility(View.INVISIBLE);
-               }
+                public void run() {
+                    _label.setText("");
+                    _permissionButton.setVisibility(View.INVISIBLE);
+                    _feedButton.setVisibility(View.INVISIBLE);
+                }
             });
         }
 
@@ -190,7 +189,7 @@ public class FBActivity extends Activity {
     private class FBRequestDelegateImpl extends FBRequestDelegate {
 
         @Override
-		public void request_didLoad(FBRequest request, Object result) {
+        public void request_didLoad(FBRequest request, Object result) {
 
             String name = null;
 
@@ -207,7 +206,7 @@ public class FBActivity extends Activity {
         }
 
         @Override
-		public void request_didFailWithError(FBRequest request, Throwable error) {
+        public void request_didFailWithError(FBRequest request, Throwable error) {
             _label.setText(error.toString());
         }
     }
@@ -215,13 +214,13 @@ public class FBActivity extends Activity {
     private class FBHasPermissionRD extends FBRequestDelegate {
 
         @Override
-		protected void request_didFailWithError(FBRequest request,
-				Throwable error) {
-			super.request_didFailWithError(request, error);
-		}
+        protected void request_didFailWithError(FBRequest request,
+                                                Throwable error) {
+            super.request_didFailWithError(request, error);
+        }
 
-		@Override
-		public void request_didLoad(FBRequest request, Object result) {
+        @Override
+        public void request_didLoad(FBRequest request, Object result) {
             int hasPermission = 0;
 
             if (result instanceof JSONArray) {
@@ -229,13 +228,12 @@ public class FBActivity extends Activity {
                 try {
                     JSONObject jo = jsonArray.getJSONObject(0);
                     hasPermission = jo.getInt("publish_stream");
-                    if (hasPermission == 0)
-                    {
+                    if (hasPermission == 0) {
                         mHandler.post(new Runnable() {
                             public void run() {
                                 _permissionButton.setVisibility(View.VISIBLE);
                             }
-                         });
+                        });
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

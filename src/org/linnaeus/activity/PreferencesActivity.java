@@ -34,7 +34,7 @@ public class PreferencesActivity extends PreferenceActivity {
 
                     @Override
                     public boolean onPreferenceChange(Preference p, Object newValue) {
-                        _appPreferences.setSaveStateOnExit((Boolean)newValue);
+                        _appPreferences.setSaveStateOnExit((Boolean) newValue);
                         return true;
                     }
                 });
@@ -46,7 +46,7 @@ public class PreferencesActivity extends PreferenceActivity {
 
                     @Override
                     public boolean onPreferenceChange(Preference p, Object newValue) {
-                        _appPreferences.setShakeFeatureEnabled((Boolean)newValue);
+                        _appPreferences.setShakeFeatureEnabled((Boolean) newValue);
                         return true;
                     }
                 });
