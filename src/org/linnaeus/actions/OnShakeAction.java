@@ -14,8 +14,15 @@ import org.linnaeus.activity.PaintAreaActivity;
 
 public class OnShakeAction {
 
+    public static AlertDialog _dialog;
+
     public void doAction(Context context, final PaintAreaActivity.PaintView paintView){
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        if(_dialog != null && _dialog.isShowing()){
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         builder.setMessage("Are you sure you want to clear drawing?")
                 .setCancelable(false)
@@ -33,6 +40,7 @@ public class OnShakeAction {
                     }
                 });
 
-        builder.create().show();    
+        _dialog = builder.create();
+        _dialog.show();
     }
 }

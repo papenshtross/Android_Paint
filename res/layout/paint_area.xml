@@ -3,7 +3,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="fill_parent"
-              android:layout_height="fill_parent">
+              android:layout_height="fill_parent"
+              android:id="@+id/layout_main">
     <LinearLayout  android:id="@+id/paint_view_layout"
                    android:layout_width="fill_parent"
                    android:layout_height="fill_parent"
@@ -14,13 +15,6 @@
                   android:layout_gravity="center_horizontal"
                   android:id="@+id/paint_view_menu"
                   style="@android:style/ButtonBar">
-        <ImageButton android:id="@+id/btn_color"
-                     android:focusable="true"
-                     android:layout_width="match_parent"
-                     android:layout_height="match_parent"
-                     android:layout_weight="1"
-                     android:src="@drawable/color_picker"
-                     android:text="Color"/>
         <ImageButton android:id="@+id/btn_brush"
                      android:focusable="true"
                      android:layout_width="match_parent"
@@ -28,6 +22,20 @@
                     android:layout_weight="1"
                     android:src="@android:drawable/ic_menu_edit"
                     android:text="Brush style"/>
+        <ImageButton android:id="@+id/btn_color"
+                     android:focusable="true"
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent"
+                     android:layout_weight="1"
+                     android:src="@drawable/color_picker"
+                     android:text="Color"/>
+        <ImageButton android:id="@+id/btn_child"
+                    android:focusable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:src="@drawable/happy"
+                    android:text="Child mode"/>
         <ImageButton android:id="@+id/btn_undo" 
                     android:focusable="true"
                     android:layout_width="match_parent"
@@ -42,12 +50,5 @@
                     android:layout_weight="1"
                     android:src="@drawable/ic_menu_revert"
                     android:text="Redo"/>
-        <ImageButton android:id="@+id/btn_child"
-                    android:focusable="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:src="@drawable/happy"
-                    android:text="Child mode"/>
     </LinearLayout>
 </LinearLayout>

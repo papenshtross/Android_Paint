@@ -3,6 +3,7 @@ package org.linnaeus.utils;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import org.linnaeus.activity.R;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,7 +15,9 @@ import android.content.DialogInterface;
 public class WarningAlert {
 
     public static void show(Context sender, String message){
-        show(sender, "2D Graphical Editor", message);
+
+        String appName = sender.getString(R.string.app_name);       
+        show(sender, appName, message);
     }
 
     public static void show(Context sender, String title, String message){

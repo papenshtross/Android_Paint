@@ -47,10 +47,10 @@ public final class R {
     public static final class id {
         public static final int background=0x7f080017;
         public static final int btn_brush=0x7f080030;
-        public static final int btn_child=0x7f080033;
-        public static final int btn_color=0x7f08002f;
-        public static final int btn_redo=0x7f080032;
-        public static final int btn_undo=0x7f080031;
+        public static final int btn_child=0x7f080032;
+        public static final int btn_color=0x7f080031;
+        public static final int btn_redo=0x7f080034;
+        public static final int btn_undo=0x7f080033;
         public static final int button_directory_pick=0x7f080024;
         public static final int button_pick=0x7f080026;
         public static final int colorcircle=0x7f080019;
@@ -77,12 +77,13 @@ public final class R {
         public static final int l_documenters=0x7f08000e;
         public static final int l_translators=0x7f080010;
         public static final int label=0x7f08001e;
+        public static final int layout_main=0x7f08002d;
         public static final int ll_credits=0x7f08000b;
         public static final int ll_email=0x7f080007;
         public static final int ll_info=0x7f080001;
         public static final int login=0x7f08001d;
-        public static final int paint_view_layout=0x7f08002d;
-        public static final int paint_view_menu=0x7f08002e;
+        public static final int paint_view_layout=0x7f08002e;
+        public static final int paint_view_menu=0x7f08002f;
         public static final int permissionButton=0x7f08001f;
         public static final int saturation=0x7f080018;
         public static final int scan_progress=0x7f080029;

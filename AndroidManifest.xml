@@ -28,19 +28,28 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".PaintAreaActivity"/>
+        <activity android:name=".PaintAreaActivity"
+                  android:screenOrientation="portrait"/>
         <activity android:name="org.openintents.colorpicker.ColorPickerActivity"
-                  android:label="@string/color_picker"/>
-        <activity android:name="org.openintents.filemanager.FileManagerActivity"/>
-        <activity android:name="org.openintents.about.AboutActivity"/>
-        <activity android:name=".PreferencesActivity"/>
+                  android:label="@string/color_picker"
+                  android:screenOrientation="portrait"/>
+        <activity android:name="org.openintents.filemanager.FileManagerActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name="org.openintents.about.AboutActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".PreferencesActivity"
+                  android:screenOrientation="portrait"/>
         <activity android:name="com.codecarpet.fbconnect.FBLoginActivity"
-			android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+			      android:theme="@android:style/Theme.Translucent.NoTitleBar"
+                  android:screenOrientation="portrait"/>
 		<activity android:name="com.codecarpet.fbconnect.FBPermissionActivity"
-			android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+			      android:theme="@android:style/Theme.Translucent.NoTitleBar"
+                  android:screenOrientation="portrait"/>
 		<activity android:name="com.codecarpet.fbconnect.FBFeedActivity"
-			android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-        <activity android:name=".FBActivity"/>
+			      android:theme="@android:style/Theme.Translucent.NoTitleBar"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".FBActivity"
+                  android:screenOrientation="portrait"/>
         <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
         <uses-permission android:name="android.permission.INTERNET"/>
     </application>

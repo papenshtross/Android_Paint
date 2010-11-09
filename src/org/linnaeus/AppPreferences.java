@@ -28,7 +28,7 @@ public class AppPreferences {
     }
 
     public Boolean isShakeFeatureEnabled(){
-        return _preferences.getBoolean("shakeFeatureEnabled", false);
+        return _preferences.getBoolean("shakeFeatureEnabled", true);
     }
 
     public void setShakeFeatureEnabled(Boolean value){

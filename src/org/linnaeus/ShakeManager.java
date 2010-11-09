@@ -14,14 +14,23 @@ import java.util.ArrayList;
 
 public final class ShakeManager implements SensorEventListener {
 
-    public static final int DEFAULT_SHAKE_THRESHOLD = 800;
+    private static final int FORCE_THRESHOLD = 1000;
+    private static final int TIME_THRESHOLD = 100;
+    private static final int SHAKE_TIMEOUT = 500;
+    private static final int SHAKE_DURATION = 1000;
+    private static final int SHAKE_COUNT = 3;
 
     private Context _context;
 
     private SensorManager _sensorMgr;
     private long _lastUpdate = -1;
     private float _last_x, _last_y, _last_z;
-    private int _shakeThreshold = DEFAULT_SHAKE_THRESHOLD;
+
+
+    private int _shakeCount = 0;
+    private long _lastShake;
+    private long _lastForce;
+
     private ArrayList<ShakeEventListener> _listeners;
 
     public ShakeManager(Context context) {
@@ -43,14 +52,6 @@ public final class ShakeManager implements SensorEventListener {
             // Non accelerometer on this device.
             _sensorMgr.unregisterListener(this);
         }
-    }
-
-    public int getShakeThreshold(){
-        return _shakeThreshold;
-    }
-
-    public void setShakeThreshold(int value){
-        _shakeThreshold = value;
     }
 
     public void addListener(ShakeEventListener listener){
@@ -78,8 +79,12 @@ public final class ShakeManager implements SensorEventListener {
 
             long curTime = System.currentTimeMillis();
 
+            if ((curTime - _lastForce) > SHAKE_TIMEOUT) {
+              _shakeCount = 0;
+            }
+
             // Only allow one update every 100ms.
-       	    if ((curTime - _lastUpdate) > 100) {
+       	    if ((curTime - _lastUpdate) > TIME_THRESHOLD) {
    	    		long diffTime = (curTime - _lastUpdate);
    	    		_lastUpdate = curTime;
 
@@ -89,14 +94,25 @@ public final class ShakeManager implements SensorEventListener {
 
   	    		float speed = Math.abs(x + y + z - _last_x - _last_y - _last_z)/ diffTime * 10000;
 
-                if (speed > _shakeThreshold) {
-                  for(ShakeEventListener listener : _listeners) {
-                    listener.onShakeEvent();
-                  }
+                if (speed > FORCE_THRESHOLD) {
+
+                    if ((++_shakeCount >= SHAKE_COUNT) && (curTime - _lastShake > SHAKE_DURATION)) {
+                      _lastShake = curTime;
+                      _shakeCount = 0;
+                      if (_sensorMgr != null) {
+                          for(ShakeEventListener listener : _listeners) {
+                            listener.onShakeEvent();
+                          }
+                      }
+                    }
+
+                    _lastForce = curTime;
   	    		}
-  	    		_last_x = x;
-  	    		_last_y = y;
-  	    		_last_z = z;
+
+                _lastForce = curTime;
+                _last_x = x;
+                _last_y = y;
+                _last_z = z;
       	    }
       	}
     }

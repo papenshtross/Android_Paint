@@ -12,7 +12,7 @@ import android.os.Handler;
  */
 public class MainActivity extends Activity {
 
-    private final int SPLASH_DISPLAY_LENGHT = 1000;
+    private final int SPLASH_DISPLAY_LENGTH = 2000;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -24,6 +24,6 @@ public class MainActivity extends Activity {
                 startActivity(new Intent(MainActivity.this, PaintAreaActivity.class));
                 MainActivity.this.finish();
             }
-        }, SPLASH_DISPLAY_LENGHT);
+        }, SPLASH_DISPLAY_LENGTH);
     }
 }

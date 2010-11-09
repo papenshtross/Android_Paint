@@ -1,7 +1,9 @@
 Samples:
 http://www.dailymotion.com/video/xe6su9_doodledroid-for-the-android-review_tech
 
--   - save/load settings on application restart;
+- M - add preview action;
+- M - add color indication on button;
+- M - save/load settings on application restart;
 -   - take picture from camera;
 - R - application store facade (factory);
 - R - remove or add welcome screen;
@@ -24,3 +26,5 @@ http://www.dailymotion.com/video/xe6su9_doodledroid-for-the-android-review_tech
     http://android-developers.blogspot.com/2010/06/making-sense-of-multitouch.html
 - M - options (shake feature enable/disable, save state on exit etc.);
 - ? - brightness changing and other options;
+
+- R - clear is also a paint action because it affects target image;
