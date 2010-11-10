@@ -20,7 +20,7 @@ import org.linnaeus.bean.PaintAction;
 import org.linnaeus.dialog.ColorPickerDialog;
 import org.linnaeus.drawing.*;
 import org.linnaeus.utils.FileUtils;
-import org.linnaeus.utils.ImageRotator;
+import org.linnaeus.utils.ImageUtils;
 import org.linnaeus.utils.WarningAlert;
 import org.openintents.about.AboutActivity;
 import org.openintents.colorpicker.ColorPickerActivity;
@@ -43,7 +43,9 @@ public class PaintAreaActivity extends GraphicsActivity
     private AppPreferences _preferences;
     private Stack<PaintAction> _paintActions;
     private int _currentAction;
-    private Boolean _childMode = false;
+
+    ImageButton _btnColor;
+    ImageButton _btnChildMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,21 +54,21 @@ public class PaintAreaActivity extends GraphicsActivity
         _paintActions = new Stack<PaintAction>();
         _preferences = AppPreferences.getAppPreferences(this);
 
-        initPaintViewLayout();
-
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setDither(true);
-        mPaint.setColor(0xFFFF0000);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setStrokeWidth(12);
+        mPaint.setColor(0xFFFF0000);
 
         mEmboss = new EmbossMaskFilter(new float[]{1, 1, 1},
                 0.4f, 6, 3.5f);
 
         mBlur = new BlurMaskFilter(8, BlurMaskFilter.Blur.NORMAL);
+        
+        initPaintViewLayout();
 
         registerForContextMenu(_paintView);
 
@@ -90,8 +92,9 @@ public class PaintAreaActivity extends GraphicsActivity
         _paintView = new PaintView(this);
         layout.addView(_paintView);
 
-        ImageButton btnColor = (ImageButton) findViewById(R.id.btn_color);
-        btnColor.setOnClickListener(new View.OnClickListener() {
+        _btnColor = (ImageButton) findViewById(R.id.btn_color);
+        colorChanged(mPaint.getColor()); // Update color icon.
+        _btnColor.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -119,7 +122,7 @@ public class PaintAreaActivity extends GraphicsActivity
         });
 
         ImageButton btnRedo = (ImageButton) findViewById(R.id.btn_redo);
-        BitmapDrawable bmd = ImageRotator.rotate(this, R.drawable.ic_menu_revert);
+        BitmapDrawable bmd = ImageUtils.rotate(this, R.drawable.ic_menu_revert);
         btnRedo.setImageDrawable(bmd);
         btnRedo.setOnClickListener(new View.OnClickListener() {
 
@@ -129,12 +132,13 @@ public class PaintAreaActivity extends GraphicsActivity
             }
         });
 
-        ImageButton btnChildMode = (ImageButton) findViewById(R.id.btn_child);
-        btnChildMode.setOnClickListener(new View.OnClickListener() {
+        _btnChildMode = (ImageButton) findViewById(R.id.btn_child);
+        _btnChildMode.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                _childMode = !_childMode;
+
+                 _btnChildMode.setSelected(!_btnChildMode.isSelected());
             }
         });
     }
@@ -173,7 +177,11 @@ public class PaintAreaActivity extends GraphicsActivity
     private MaskFilter mBlur;
 
     public void colorChanged(int color) {
+
         mPaint.setColor(color);
+
+        BitmapDrawable bmd = ImageUtils.drawPoint(this, R.drawable.color_picker, color);
+        _btnColor.setImageDrawable(bmd);
     }
 
     @Override
@@ -263,7 +271,7 @@ public class PaintAreaActivity extends GraphicsActivity
         public boolean onTouchEvent(MotionEvent event) {
 
             if(ActivityManager.isUserAMonkey()){
-                _childMode = true;
+                _btnChildMode.performClick();
             }
 
             float x = event.getX();
@@ -274,7 +282,7 @@ public class PaintAreaActivity extends GraphicsActivity
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN: {
 
-                    if(_childMode){
+                    if(_btnChildMode.isSelected()){
                         applyChildCorrections();
                     }
 
@@ -502,6 +510,7 @@ public class PaintAreaActivity extends GraphicsActivity
                 if (resultCode == RESULT_OK) {
                     int color = data.getExtras().getInt(ColorPickerIntents.EXTRA_COLOR);
                     colorChanged(color);
+                    _btnChildMode.setSelected(false);
                 }
                 break;
             }

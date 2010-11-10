@@ -20,8 +20,9 @@ import java.io.IOException;
 
 public class FileUtils {
 
-    public static final String STATE_TEMP_FILE_NAME = "tmpImage.jpg";
-    public static final String SHARE_TEMP_FILE_NAME = "shareImage.jpg";
+    public static final String FILE_NAME_EXT = ".png";
+    public static final String STATE_TEMP_FILE_NAME = "tmpImage" + FILE_NAME_EXT;
+    public static final String SHARE_TEMP_FILE_NAME = "shareImage" + FILE_NAME_EXT;
 
     public static Uri getLocalImagePath(Context context, String fileName){
         File file = context.getFileStreamPath(fileName);
@@ -38,7 +39,7 @@ public class FileUtils {
 
         try {
             fos = context.openFileOutput(fileName, Context.MODE_WORLD_READABLE);
-            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
             fos.flush();
             fos.close();
             return true;
@@ -134,8 +135,8 @@ public class FileUtils {
 
                 String fileNameToSave = filePath;
 
-                if(!fileNameToSave.endsWith(".jpg")){
-                    fileNameToSave += ".jpg";
+                if(!fileNameToSave.endsWith(FILE_NAME_EXT)){
+                    fileNameToSave += FILE_NAME_EXT;
                 }
 
                 fos = new FileOutputStream(fileNameToSave);

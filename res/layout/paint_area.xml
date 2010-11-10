@@ -34,7 +34,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:src="@drawable/happy"
+                    android:src="@drawable/child_mode"
                     android:text="Child mode"/>
         <ImageButton android:id="@+id/btn_undo" 
                     android:focusable="true"
