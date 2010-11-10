@@ -222,6 +222,12 @@ public class PaintAreaActivity extends GraphicsActivity
         public void onClear() {
             mCanvas.drawColor(0xFFFFFFFF);
             invalidate();
+            addActionToHistory();
+        }
+
+        private void addActionToHistory(){
+             _paintActions.push(new PaintAction(Bitmap.createBitmap(mBitmap)));
+            _currentAction = _paintActions.size();    
         }
 
         public Bitmap getDrawableBitmap() {
@@ -302,13 +308,11 @@ public class PaintAreaActivity extends GraphicsActivity
                     invalidate();
 
                     if (_currentAction < _paintActions.size()) {
-                        for (int i = 0; i < _paintActions.size() - _currentAction; i++) {
-                            _paintActions.removeElement(_paintActions.size());
+                        for (int i = 0; i < _paintActions.size() - _currentAction + 1; i++) {
+                            _paintActions.removeElementAt(_paintActions.size() - 1);
                         }
                     }
-                    
-                    _paintActions.push(new PaintAction(Bitmap.createBitmap(mBitmap)));
-                    _currentAction = _paintActions.size();
+                    addActionToHistory();
                     break;
                 }
             }
