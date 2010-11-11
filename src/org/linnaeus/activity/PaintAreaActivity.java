@@ -621,7 +621,7 @@ public class PaintAreaActivity extends GraphicsActivity
                 return true;
             }
             case SHARE_MENU_ID: {
-                new AttachImageAction().doAction(this, _paintView);
+                new ShareToAction().doAction(this, _paintView);
                 // TODO: Add dynamic subitems list composition
                 return true;
             }
