@@ -173,27 +173,31 @@ public class PaintAreaActivity extends GraphicsActivity
         if (_shakeManager != null) {
             _shakeManager.onPause();
         }
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (_preferences.isSaveStateOnExit()) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        SharedPreferences.Editor edit = prefs.edit();
-        edit.putInt(PREFERENCE_BRUSH_STYLE, _brushStyle);
-        edit.putFloat(PREFERENCE_BRUSH_WIDTH, mPaint.getStrokeWidth());
-        edit.putInt(PREFERENCE_COLOR, mPaint.getColor());
-        edit.putBoolean(PREFERENCE_CHILD_MODE, _btnChildMode.isSelected());
+            SharedPreferences.Editor edit = prefs.edit();
+            edit.putInt(PREFERENCE_BRUSH_STYLE, _brushStyle);
+            edit.putFloat(PREFERENCE_BRUSH_WIDTH, mPaint.getStrokeWidth());
+            edit.putInt(PREFERENCE_COLOR, mPaint.getColor());
+            edit.putBoolean(PREFERENCE_CHILD_MODE, _btnChildMode.isSelected());
 
-        edit.commit();
+            edit.commit();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         _shakeManager.onResume();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        _brushStyle = prefs.getInt(PREFERENCE_BRUSH_STYLE, 0);
-        setBrushStyle();
-        mPaint.setStrokeWidth(prefs.getFloat(PREFERENCE_BRUSH_WIDTH, 12));
-        colorChanged(prefs.getInt(PREFERENCE_COLOR, Color.RED));
-        _btnChildMode.setSelected(prefs.getBoolean(PREFERENCE_CHILD_MODE, false));
+        if (_preferences.isSaveStateOnExit()) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            _brushStyle = prefs.getInt(PREFERENCE_BRUSH_STYLE, 0);
+            setBrushStyle();
+            mPaint.setStrokeWidth(prefs.getFloat(PREFERENCE_BRUSH_WIDTH, 12));
+            colorChanged(prefs.getInt(PREFERENCE_COLOR, Color.RED));
+            _btnChildMode.setSelected(prefs.getBoolean(PREFERENCE_CHILD_MODE, false));
+        }
     }
 
     private Paint mPaint;
@@ -201,7 +205,7 @@ public class PaintAreaActivity extends GraphicsActivity
     private MaskFilter mBlur;
 
     public void colorChanged(int color) {
-        mPaint.setColor(color);           
+        mPaint.setColor(color);
         BitmapDrawable bmd = ImageUtils.drawPoint(this, R.drawable.color_picker, color);
         _btnColor.setImageDrawable(bmd);
     }
@@ -433,17 +437,17 @@ public class PaintAreaActivity extends GraphicsActivity
         // TODO: Change on more suatable implementation.
 
         final String[] items = {"Simple",
-                                "Eraser",
-                                "Emboss",
-                                "Blur",
-                                "SrcATop"};
+                "Eraser",
+                "Emboss",
+                "Blur",
+                "SrcATop"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Pick a brush style");
         BrushStyleListAdapter adapter = new BrushStyleListAdapter(this, items);
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                _brushStyle = item; 
+                _brushStyle = item;
                 setBrushStyle();
                 dialog.cancel();
             }
