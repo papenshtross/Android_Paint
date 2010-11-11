@@ -54,9 +54,6 @@ public class PaintAreaActivity extends GraphicsActivity
     private Stack<PaintAction> _paintActions;
     private int _currentAction;
     private int _brushStyle;
-    private int _brushWidth;
-    private int _color;
-    private boolean _childMode;
 
     ImageButton _btnColor;
     ImageButton _btnChildMode;
@@ -195,7 +192,7 @@ public class PaintAreaActivity extends GraphicsActivity
         _brushStyle = prefs.getInt(PREFERENCE_BRUSH_STYLE, 0);
         setBrushStyle();
         mPaint.setStrokeWidth(prefs.getFloat(PREFERENCE_BRUSH_WIDTH, 12));
-        mPaint.setColor(prefs.getInt(PREFERENCE_COLOR, Color.RED));
+        colorChanged(prefs.getInt(PREFERENCE_COLOR, Color.RED));
         _btnChildMode.setSelected(prefs.getBoolean(PREFERENCE_CHILD_MODE, false));
     }
 
@@ -435,16 +432,16 @@ public class PaintAreaActivity extends GraphicsActivity
 
         // TODO: Change on more suatable implementation.
 
-        final CharSequence[] items = {
-                "Simple",
-                "Eraser",
-                "Emboss",
-                "Blur",
-                "SrcATop"};
+        final String[] items = {"Simple",
+                                "Eraser",
+                                "Emboss",
+                                "Blur",
+                                "SrcATop"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Pick a brush style");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
+        BrushStyleListAdapter adapter = new BrushStyleListAdapter(this, items);
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 _brushStyle = item; 
                 setBrushStyle();
