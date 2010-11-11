@@ -1,8 +1,6 @@
 package org.linnaeus.drawing;
 
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
+import android.graphics.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,6 +12,11 @@ public class TriangleShape extends RectShape {
 
     public TriangleShape(){
         super();
+    }
+
+    @Override
+    public String getName() {
+        return "Triangle";
     }
 
     @Override

@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import org.linnaeus.AppPreferences;
 import org.linnaeus.ShakeManager;
 import org.linnaeus.actions.*;
-import org.linnaeus.actions.ShareToAction;
+import org.linnaeus.actions.AttachImageAction;
 import org.linnaeus.bean.PaintAction;
 import org.linnaeus.dialog.ColorPickerDialog;
 import org.linnaeus.drawing.*;
@@ -30,6 +30,7 @@ import org.openintents.intents.ColorPickerIntents;
 import org.openintents.intents.FileManagerIntents;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 
@@ -37,6 +38,8 @@ public class PaintAreaActivity extends GraphicsActivity
                                implements MenuIdCollection,
                                           ColorPickerDialog.OnColorChangedListener,
                                           ShakeManager.ShakeEventListener {
+
+    private static final int HISTORY_CAPACITY = 10;
 
     private PaintView _paintView;
     private ShakeManager _shakeManager;
@@ -63,11 +66,9 @@ public class PaintAreaActivity extends GraphicsActivity
         mPaint.setStrokeWidth(12);
         mPaint.setColor(0xFFFF0000);
 
-        mEmboss = new EmbossMaskFilter(new float[]{1, 1, 1},
-                0.4f, 6, 3.5f);
-
+        mEmboss = new EmbossMaskFilter(new float[]{1, 1, 1}, 0.4f, 6, 3.5f);
         mBlur = new BlurMaskFilter(8, BlurMaskFilter.Blur.NORMAL);
-        
+
         initPaintViewLayout();
 
         registerForContextMenu(_paintView);
@@ -79,7 +80,8 @@ public class PaintAreaActivity extends GraphicsActivity
             new RestorePaintViewAction().doAction(this, _paintView);
         }
 
-        _paintActions.push(new PaintAction(Bitmap.createBitmap(_paintView.getDrawableBitmap())));
+        Bitmap bitmap = _paintView.getDrawableBitmapCopy();
+        _paintActions.push(new PaintAction(bitmap));
         _currentAction = _paintActions.size();
     }
 
@@ -234,17 +236,24 @@ public class PaintAreaActivity extends GraphicsActivity
         }
 
         private void addActionToHistory(){
+
+            if(_paintActions.size() >= HISTORY_CAPACITY){
+                _paintActions.get(0).getBitmap().recycle();
+                _paintActions.remove(0);
+            }
+
              _paintActions.push(new PaintAction(Bitmap.createBitmap(mBitmap)));
-            _currentAction = _paintActions.size();    
+            _currentAction = _paintActions.size();
         }
 
-        public Bitmap getDrawableBitmap() {
+        public Bitmap getDrawableBitmapCopy() {
             return Bitmap.createBitmap(mBitmap);
         }
 
         public void setDrawableBitmap(Bitmap bitmap) {
             mCanvas.drawBitmap(bitmap, 0, 0, mBitmapPaint);
             invalidate();
+            addActionToHistory();
         }
 
         @Override
@@ -357,8 +366,9 @@ public class PaintAreaActivity extends GraphicsActivity
                 .setIcon(R.drawable.ic_menu_compose);
 
         drawingItem.add(0, BRUSH_WIDTH_MENU_ID, 0, "Brush width");
-        drawingItem.add(0, FIGURE_MENU_ID, 0, "Figure");
+        drawingItem.add(0, FIGURE_MENU_ID, 0, "Shapes");
         drawingItem.add(0, CLEAR_SHAPE_MENU_ID, 0, "Clear");
+        //drawingItem.add(0, ATTACH_IMAGE_MENU_ID, 0, "Use image as...");
 
         menu.add(0, SHARE_MENU_ID, 0, "Share").setIcon(android.R.drawable.ic_menu_share);
 
@@ -377,18 +387,23 @@ public class PaintAreaActivity extends GraphicsActivity
     }
 
     private void onBrushWidthMenuItemSelected() {
+
         final String[] items = new String[MAX_BRUSH_WIDTH_VALUE / BRUSH_VALUE_STEP];
+
         for (int i = MIN_BRUSH_WIDTH_VALUE; i <= MAX_BRUSH_WIDTH_VALUE; i += BRUSH_VALUE_STEP) {
             items[i / BRUSH_VALUE_STEP - 1] = String.valueOf(i);
         }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select brush width");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
+        BrushWidthListAdapter adapter = new BrushWidthListAdapter(this, items);
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 mPaint.setStrokeWidth(Float.valueOf(items[item]));
                 dialog.cancel();
             }
         });
+
         builder.create().show();
     }
 
@@ -449,50 +464,39 @@ public class PaintAreaActivity extends GraphicsActivity
 
     private void onFigureMenuItemSelected() {
 
-        // TODO: Change on more suatable implementation.
+        final ArrayList<Shape> shapeItems = new ArrayList<Shape>() ;
 
-        final CharSequence[] items = {
-                "Path",
-                "Rectangle",
-                "Round Rectangle",
-                "Oval",
-                "Triangle",
-                "Diamond"};
+        shapeItems.add(new LineShape());
+        shapeItems.add(new PathShape());
+        shapeItems.add(new OvalShape());
+        shapeItems.add(new RectShape());
+        shapeItems.add(new RoundRectShape());
+        shapeItems.add(new TriangleShape());
+        shapeItems.add(new DiamondShape());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Pick a figure");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
+        builder.setTitle("Pick a shape");
 
-                switch (item) {
-                    case 0: {
-                        _paintView.onNewShapeSelect(new PathShape());
-                        break;
-                    }
-                    case 1: {
-                        _paintView.onNewShapeSelect(new RectShape());
-                        break;
-                    }
-                    case 2: {
-                        _paintView.onNewShapeSelect(new RoundRectShape());
-                        break;
-                    }
-                    case 3: {
-                        _paintView.onNewShapeSelect(new OvalShape());
-                        break;
-                    }
-                    case 4: {
-                        _paintView.onNewShapeSelect(new TriangleShape());
-                        break;
-                    }
-                    case 5: {
-                        _paintView.onNewShapeSelect(new DiamondShape());
-                        break;
-                    }
+        ShapeListAdapter listAdapter = new ShapeListAdapter(this, shapeItems);
+
+        builder.setAdapter(listAdapter, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int itemIndex) {
+
+                Class shapeClass = shapeItems.get(itemIndex).getClass();
+
+                try{
+                    Shape instance = (Shape)shapeClass.newInstance();
+                    _paintView.onNewShapeSelect(instance);
+                }
+                catch(Exception ex){
+                    ex.printStackTrace();
+                    WarningAlert.show(PaintAreaActivity.this,
+                            "Cannot select shape: " + ex.getMessage());
                 }
                 dialog.cancel();
             }
         });
+
         builder.create().show();
     }
 
@@ -527,6 +531,7 @@ public class PaintAreaActivity extends GraphicsActivity
                         } else {
                             Bitmap bitmapImage = BitmapFactory.decodeFile(fileUri.getPath());
                             _paintView.setDrawableBitmap(bitmapImage);
+                            bitmapImage.recycle();
                         }
                     }
                     catch (Exception ex) {
@@ -546,8 +551,10 @@ public class PaintAreaActivity extends GraphicsActivity
                     if (openFile.isDirectory()) {
                         WarningAlert.show(this, "Please specify a valid image path.");
                     } else {
-                        FileUtils.saveImage(this,
-                                _paintView.getDrawableBitmap(), fileUri.getPath());
+
+                        Bitmap bitmap = _paintView.getDrawableBitmapCopy();
+                        FileUtils.saveImage(this, bitmap, fileUri.getPath());
+                        bitmap.recycle();
                     }
                 }
                 break;
@@ -580,6 +587,10 @@ public class PaintAreaActivity extends GraphicsActivity
                 onFigureMenuItemSelected();
                 return true;
             }
+            case ATTACH_IMAGE_MENU_ID: {
+                new AttachImageAction().doAction(this, _paintView);
+                return true;
+            }
             case CLEAR_SHAPE_MENU_ID: {
                 _paintView.onClear();
                 break;
@@ -610,7 +621,7 @@ public class PaintAreaActivity extends GraphicsActivity
                 return true;
             }
             case SHARE_MENU_ID: {
-                new ShareToAction().doAction(this, _paintView);
+                new AttachImageAction().doAction(this, _paintView);
                 // TODO: Add dynamic subitems list composition
                 return true;
             }
@@ -619,7 +630,7 @@ public class PaintAreaActivity extends GraphicsActivity
                 return true;
             }
             case SHARE_OTHER_MENU_ID: {
-                new ShareToAction().doAction(this, _paintView);
+                new AttachImageAction().doAction(this, _paintView);
                 return true;
             }
         }

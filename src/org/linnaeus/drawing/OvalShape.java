@@ -1,9 +1,6 @@
 package org.linnaeus.drawing;
 
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.RectF;
+import android.graphics.*;
 import android.view.MotionEvent;
 
 /**
@@ -15,8 +12,14 @@ import android.view.MotionEvent;
 
 public class OvalShape extends RectShape {
 
+
     public OvalShape(){
         super();
+    }
+
+    @Override
+    public String getName() {
+        return "Oval";
     }
 
     @Override

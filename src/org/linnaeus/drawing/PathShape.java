@@ -1,8 +1,6 @@
 package org.linnaeus.drawing;
 
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
+import android.graphics.*;
 import android.view.MotionEvent;
 
 /**
@@ -19,6 +17,68 @@ public class PathShape extends Shape {
 
     public PathShape(){
         _path = new Path();
+    }
+
+    @Override
+    public String getName() {
+        return "Curve";
+    }
+
+    @Override
+    public void draw(Canvas canvas, Paint paint, Region region) {
+
+        if(_path.isEmpty()){
+
+            Rect rect = getRectWithDefaultMargins(region);
+
+            int x = rect.left;
+            int y = rect.bottom;
+
+            int xPile = (rect.left + rect.right) /6;
+            int yPile = (rect.top + rect.bottom) /6;
+
+            _path.moveTo(x, y);
+
+            _x = x;
+            _y = y;
+
+            x = 2 * xPile;
+            y = 4 * yPile;
+
+            _path.quadTo(_x, _y, (x + _x)/2, (y + _y)/2);
+
+            _x = x;
+            _y = y;
+
+            x = 3 * xPile;
+            y = 4 * yPile;
+
+            _path.quadTo(_x, _y, (x + _x)/2, (y + _y)/2);
+
+            _x = x;
+            _y = y;
+
+            x = 4 * xPile;
+            y = 2 * yPile;
+
+            _path.quadTo(_x, _y, (x + _x)/2, (y + _y)/2);
+
+            _x = x;
+            _y = y;
+
+            x = rect.right;
+            y = rect.top;
+            
+            _path.quadTo(_x, _y, (x + _x)/2, (y + _y)/2);
+
+            _x = x;
+            _y = y;
+
+            _path.lineTo(_x, _y);
+
+            draw(canvas, paint);
+            reset();
+        }
     }
 
     @Override

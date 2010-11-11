@@ -1,6 +1,7 @@
 package org.linnaeus.actions;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import org.linnaeus.activity.PaintAreaActivity;
 import org.linnaeus.utils.FileUtils;
 
@@ -17,8 +18,13 @@ public class SavePaintViewAction extends Action {
     public void doAction(Context context, PaintAreaActivity.PaintView paintView) {
 
         try{
-            FileUtils.saveLocalImage(context, paintView.getDrawableBitmap(),
+
+            Bitmap bitmap = paintView.getDrawableBitmapCopy();
+
+            FileUtils.saveLocalImage(context, bitmap,
                     FileUtils.STATE_TEMP_FILE_NAME, true);
+
+            bitmap.recycle();
         }
         catch(Exception ex){
             //WarningAlert.show(this, "Cannot save paint area: " + ex.getMessage());

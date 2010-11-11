@@ -3,6 +3,7 @@ package org.linnaeus.drawing;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Region;
 import android.view.MotionEvent;
 
 /**
@@ -17,7 +18,23 @@ public class RectShape extends Shape {
     protected Rect _rect;
 
     public RectShape() {
-        _rect = new Rect(0, 0, 0, 0);
+        _rect = new Rect();
+    }
+
+    @Override
+    public String getName() {
+        return "Rectangle";
+    }
+
+    @Override
+    public void draw(Canvas canvas, Paint paint, Region region) {
+
+        if(_rect.isEmpty()){
+
+            _rect.set(getRectWithDefaultMargins(region));
+            draw(canvas, paint);
+            reset();
+        }
     }
 
     @Override

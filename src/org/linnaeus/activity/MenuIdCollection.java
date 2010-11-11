@@ -34,4 +34,9 @@ public interface MenuIdCollection {
     public static final int SHARE_OTHER_MENU_ID = Menu.FIRST + 23;
     public static final int REDO_MENU_ID = Menu.FIRST + 24;
     public static final int UNDO_MENU_ID = Menu.FIRST + 25;
+
+    public static final int SAVE_TO_GALLERY_MENU_ID = Menu.FIRST + 26;
+    public static final int SAVE_TO_PHONE_MENU_ID = Menu.FIRST + 27;
+
+    public static final int ATTACH_IMAGE_MENU_ID = Menu.FIRST + 27;
 }

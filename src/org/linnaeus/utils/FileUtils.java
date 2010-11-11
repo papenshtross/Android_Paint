@@ -40,6 +40,7 @@ public class FileUtils {
         try {
             fos = context.openFileOutput(fileName, Context.MODE_WORLD_READABLE);
             bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            bitmapImage.recycle();
             fos.flush();
             fos.close();
             return true;
@@ -95,7 +96,8 @@ public class FileUtils {
             try {
 
                 fos = new FileOutputStream(imageDir + "\\" + fileName);
-                bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                bitmapImage.recycle();
                 fos.flush();
                 fos.close();
                 return true;
@@ -140,7 +142,8 @@ public class FileUtils {
                 }
 
                 fos = new FileOutputStream(fileNameToSave);
-                bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                bitmapImage.recycle();
                 fos.flush();
                 fos.close();
                 return true;

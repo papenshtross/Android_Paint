@@ -28,5 +28,4 @@ http://www.dailymotion.com/video/xe6su9_doodledroid-for-the-android-review_tech
 - ? - brightness changing and other options;
 
 - R - clear is also a paint action because it affects target image;
-- M - save image to gallery
-    MediaStore.Images.Media.insertImage(getContentResolver(),file.getAbsolutePath(),file.getName(),file.getName());
+- M - check image recycle method call

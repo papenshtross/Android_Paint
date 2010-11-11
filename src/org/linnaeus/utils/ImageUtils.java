@@ -45,6 +45,9 @@ public class ImageUtils {
         
         canvas.drawBitmap(bmp, 0,0, mPaint);
         canvas.drawPoint(14, 38, mPaint);
+
+        bmp.recycle();
+
         return new BitmapDrawable(image);
     }
 }

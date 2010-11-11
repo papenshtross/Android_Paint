@@ -2,6 +2,7 @@ package org.linnaeus.actions;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import org.linnaeus.activity.FBActivity;
 import org.linnaeus.activity.PaintAreaActivity;
@@ -22,8 +23,12 @@ public class FacebookShareAction extends Action {
 
         // TODO: progress bar
 
-        Boolean isOk = FileUtils.saveLocalImage(context, paintView.getDrawableBitmap(),
+        Bitmap bitmap = paintView.getDrawableBitmapCopy();
+
+        Boolean isOk = FileUtils.saveLocalImage(context, bitmap,
                 FileUtils.SHARE_TEMP_FILE_NAME, false);
+
+        bitmap.recycle();
 
         if(isOk){
             try{

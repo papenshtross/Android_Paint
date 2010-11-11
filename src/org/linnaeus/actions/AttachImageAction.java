@@ -11,10 +11,11 @@ import org.linnaeus.utils.WarningAlert;
 /**
  * Created by IntelliJ IDEA.
  * User: Immortality
- * Date: 08.11.2010
- * Time: 23:06:27
+ * Date: 11.11.2010
+ * Time: 0:44:53
  */
-public class ShareToAction extends Action {
+
+public class AttachImageAction extends Action {
 
     @Override
     public void doAction(Context context, PaintAreaActivity.PaintView paintView) {
@@ -35,14 +36,14 @@ public class ShareToAction extends Action {
                 if(tmpFileUri != null){
                     Intent intent = new Intent();
                     intent.setType("image/jpeg");
-                    intent.setAction(Intent.ACTION_SEND);
+                    intent.setAction(Intent.ACTION_ATTACH_DATA);
                     intent.putExtra(Intent.EXTRA_STREAM, tmpFileUri);
                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    context.startActivity(Intent.createChooser(intent,"Share Image..."));
+                    context.startActivity(Intent.createChooser(intent,"Use image as..."));
                 }
             }
             catch(Exception ex){
-                WarningAlert.show(context, "Cannot share image on facebook: " + ex.getMessage());
+                WarningAlert.show(context, "Cannot start image action chooser: " + ex.getMessage());
                 ex.printStackTrace();
             }
         }

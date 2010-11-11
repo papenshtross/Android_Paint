@@ -3,6 +3,7 @@ package org.linnaeus.drawing;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Region;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,6 +16,11 @@ public class DiamondShape extends RectShape {
 
     public DiamondShape(){
         super();
+    }
+
+    @Override
+    public String getName() {
+        return "Diamond";
     }
 
     @Override

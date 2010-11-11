@@ -1,9 +1,6 @@
 package org.linnaeus.drawing;
 
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.RectF;
+import android.graphics.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,6 +12,11 @@ public class RoundRectShape extends RectShape {
 
     public RoundRectShape(){
         super();
+    }
+
+    @Override
+    public String getName() {
+        return "Round rectangle";
     }
 
     @Override

@@ -26,6 +26,7 @@ public class RestorePaintViewAction extends Action {
             if(tmpFileUri != null){
                 Bitmap bitmapImage = BitmapFactory.decodeFile(tmpFileUri.getPath());
                 paintView.setDrawableBitmap(bitmapImage);
+                bitmapImage.recycle();
             }
         }
         catch(Exception ex){
