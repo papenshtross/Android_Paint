@@ -5,10 +5,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.*;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.*;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -35,17 +37,26 @@ import java.util.Random;
 import java.util.Stack;
 
 public class PaintAreaActivity extends GraphicsActivity
-                               implements MenuIdCollection,
-                                          ColorPickerDialog.OnColorChangedListener,
-                                          ShakeManager.ShakeEventListener {
+        implements MenuIdCollection,
+        ColorPickerDialog.OnColorChangedListener,
+        ShakeManager.ShakeEventListener {
 
     private static final int HISTORY_CAPACITY = 10;
+
+    private static final String PREFERENCE_COLOR = "color";
+    private static final String PREFERENCE_BRUSH_STYLE = "brush_style";
+    private static final String PREFERENCE_CHILD_MODE = "child_mode";
+    private static final String PREFERENCE_BRUSH_WIDTH = "brush_width";
 
     private PaintView _paintView;
     private ShakeManager _shakeManager;
     private AppPreferences _preferences;
     private Stack<PaintAction> _paintActions;
     private int _currentAction;
+    private int _brushStyle;
+    private int _brushWidth;
+    private int _color;
+    private boolean _childMode;
 
     ImageButton _btnColor;
     ImageButton _btnChildMode;
@@ -140,7 +151,7 @@ public class PaintAreaActivity extends GraphicsActivity
             @Override
             public void onClick(View view) {
 
-                 _btnChildMode.setSelected(!_btnChildMode.isSelected());
+                _btnChildMode.setSelected(!_btnChildMode.isSelected());
             }
         });
     }
@@ -165,13 +176,27 @@ public class PaintAreaActivity extends GraphicsActivity
         if (_shakeManager != null) {
             _shakeManager.onPause();
         }
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        SharedPreferences.Editor edit = prefs.edit();
+        edit.putInt(PREFERENCE_BRUSH_STYLE, _brushStyle);
+        edit.putFloat(PREFERENCE_BRUSH_WIDTH, mPaint.getStrokeWidth());
+        edit.putInt(PREFERENCE_COLOR, mPaint.getColor());
+        edit.putBoolean(PREFERENCE_CHILD_MODE, _btnChildMode.isSelected());
+
+        edit.commit();
     }
 
     @Override
     protected void onResume() {
-
         super.onResume();
         _shakeManager.onResume();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        _brushStyle = prefs.getInt(PREFERENCE_BRUSH_STYLE, 0);
+        setBrushStyle();
+        mPaint.setStrokeWidth(prefs.getFloat(PREFERENCE_BRUSH_WIDTH, 12));
+        mPaint.setColor(prefs.getInt(PREFERENCE_COLOR, Color.RED));
+        _btnChildMode.setSelected(prefs.getBoolean(PREFERENCE_CHILD_MODE, false));
     }
 
     private Paint mPaint;
@@ -179,9 +204,7 @@ public class PaintAreaActivity extends GraphicsActivity
     private MaskFilter mBlur;
 
     public void colorChanged(int color) {
-
-        mPaint.setColor(color);
-
+        mPaint.setColor(color);           
         BitmapDrawable bmd = ImageUtils.drawPoint(this, R.drawable.color_picker, color);
         _btnColor.setImageDrawable(bmd);
     }
@@ -235,14 +258,14 @@ public class PaintAreaActivity extends GraphicsActivity
             addActionToHistory();
         }
 
-        private void addActionToHistory(){
+        private void addActionToHistory() {
 
-            if(_paintActions.size() >= HISTORY_CAPACITY){
+            if (_paintActions.size() >= HISTORY_CAPACITY) {
                 _paintActions.get(0).getBitmap().recycle();
                 _paintActions.remove(0);
             }
 
-             _paintActions.push(new PaintAction(Bitmap.createBitmap(mBitmap)));
+            _paintActions.push(new PaintAction(Bitmap.createBitmap(mBitmap)));
             _currentAction = _paintActions.size();
         }
 
@@ -279,7 +302,7 @@ public class PaintAreaActivity extends GraphicsActivity
         @Override
         public boolean onTouchEvent(MotionEvent event) {
 
-            if(ActivityManager.isUserAMonkey()){
+            if (ActivityManager.isUserAMonkey()) {
                 _btnChildMode.performClick();
             }
 
@@ -291,7 +314,7 @@ public class PaintAreaActivity extends GraphicsActivity
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN: {
 
-                    if(_btnChildMode.isSelected()){
+                    if (_btnChildMode.isSelected()) {
                         applyChildCorrections();
                     }
 
@@ -337,11 +360,12 @@ public class PaintAreaActivity extends GraphicsActivity
         }
 
         private Random random = new Random(0);
-        private void applyChildCorrections(){
+
+        private void applyChildCorrections() {
 
             int color = Color.rgb(random.nextInt(256),
-                                  random.nextInt(256),
-                                  random.nextInt(256));
+                    random.nextInt(256),
+                    random.nextInt(256));
 
             colorChanged(color);
         }
@@ -422,49 +446,45 @@ public class PaintAreaActivity extends GraphicsActivity
         builder.setTitle("Pick a brush style");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                switch (item) {
-                    case 0: {
-                        mPaint.setMaskFilter(null);
-                        mPaint.setXfermode(null);
-                        mPaint.setAlpha(0xFF);
-                        break;
-                    }
-                    case 1: {
-                        mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-                        break;
-                    }
-                    case 2: {
-                        if (mPaint.getMaskFilter() != mEmboss) {
-                            mPaint.setMaskFilter(mEmboss);
-                        } else {
-                            mPaint.setMaskFilter(null);
-                        }
-                        break;
-                    }
-                    case 3: {
-                        if (mPaint.getMaskFilter() != mBlur) {
-                            mPaint.setMaskFilter(mBlur);
-                        } else {
-                            mPaint.setMaskFilter(null);
-                        }
-                        break;
-                    }
-                    case 4: {
-                        mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
-                        mPaint.setAlpha(0x80);
-                        break;
-                    }
-                }
-
+                _brushStyle = item; 
+                setBrushStyle();
                 dialog.cancel();
             }
         });
         builder.create().show();
     }
 
+    private void setBrushStyle() {
+        switch (_brushStyle) {
+            case 0: {
+                mPaint.setMaskFilter(null);
+                mPaint.setXfermode(null);
+                mPaint.setAlpha(0xFF);
+                break;
+            }
+            case 1: {
+                mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+                break;
+            }
+            case 2: {
+                mPaint.setMaskFilter(mEmboss);
+                break;
+            }
+            case 3: {
+                mPaint.setMaskFilter(mBlur);
+                break;
+            }
+            case 4: {
+                mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
+                mPaint.setAlpha(0x80);
+                break;
+            }
+        }
+    }
+
     private void onFigureMenuItemSelected() {
 
-        final ArrayList<Shape> shapeItems = new ArrayList<Shape>() ;
+        final ArrayList<Shape> shapeItems = new ArrayList<Shape>();
 
         shapeItems.add(new LineShape());
         shapeItems.add(new PathShape());
@@ -484,11 +504,11 @@ public class PaintAreaActivity extends GraphicsActivity
 
                 Class shapeClass = shapeItems.get(itemIndex).getClass();
 
-                try{
-                    Shape instance = (Shape)shapeClass.newInstance();
+                try {
+                    Shape instance = (Shape) shapeClass.newInstance();
                     _paintView.onNewShapeSelect(instance);
                 }
-                catch(Exception ex){
+                catch (Exception ex) {
                     ex.printStackTrace();
                     WarningAlert.show(PaintAreaActivity.this,
                             "Cannot select shape: " + ex.getMessage());
@@ -514,6 +534,10 @@ public class PaintAreaActivity extends GraphicsActivity
                 if (resultCode == RESULT_OK) {
                     int color = data.getExtras().getInt(ColorPickerIntents.EXTRA_COLOR);
                     colorChanged(color);
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                    SharedPreferences.Editor edit = prefs.edit();
+                    edit.putInt(PREFERENCE_COLOR, color);
+                    edit.commit();
                     _btnChildMode.setSelected(false);
                 }
                 break;
